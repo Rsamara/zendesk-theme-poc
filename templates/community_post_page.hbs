@@ -1,0 +1,436 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Row }}
+    <div class="element-row row align-items-center my-6" data-editable>
+
+      {{! Column }}
+      <div class="element-column col-12{{#is settings.header_search_style 'none'}} md:col-8{{/is}}" data-editable>
+
+        {{! Breadcrumbs }}
+        <div class="element-breadcrumbs breadcrumbs mb-3 md:m-0 js-breadcrumbs" id="breadcrumbs">
+          {{breadcrumbs}}
+        </div> {{! / .element-breadrcumbs }}
+
+      </div> {{! / .element-column }}
+
+      {{! Column }}
+      <div class="element-column col-12 md:col-4 empty:hidden" data-editable>
+
+        {{! Search }}
+        {{~#is settings.header_search_style 'none'}}
+          <div class="element-search search search-left" data-editable>
+            <h2 class="sr-only">{{t 'search' }}</h2>
+            {{~#if settings.search_placeholder}}
+              {{#if settings.use_translations}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=(dc settings.search_placeholder)}}
+              {{else}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=settings.search_placeholder}}
+              {{/if}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false}}
+            {{/if~}}
+            <svg class="search-icon transition" aria-hidden="true">
+              <use xlink:href="#icon-search" />
+            </svg>
+          </div>
+        {{/is~}} {{! / .element-search }}
+
+      </div> {{! / .element-column }}
+
+    </div> {{! / .element-row }}
+
+    {{! Row }}
+    <div class="element-row row col-gap-x-lg" data-editable>
+
+      {{! Column (content) }}
+      <div class="element-column page-content col-12 mb-5 lg:col lg:mb-7" data-editable>
+
+        {{! Heading }}
+        <h1 class="element-heading mt-0" data-editable>
+          {{post.title}}
+          {{#if post.internal}}
+            <svg class="svg-icon text-base font-size-xl ml-1 mb-1" aria-hidden="true">
+              <title>{{t 'internal'}}</title>
+              <use xlink:href="#icon-internal" />
+            </svg>
+          {{/if}}
+          {{#if post.pinned}}<span class="badge align-middle font-size-xs ml-1">{{t 'pinned'}}</span>{{/if}}
+          {{#if post.featured}}<span class="badge align-middle font-size-xs ml-1">{{t 'featured'}}</span>{{/if}}
+          {{#is post.status 'none'}}
+          {{else}}
+            <span class="badge badge-{{post.status_dasherized}} align-middle font-size-xs ml-1">{{post.status_name}}</span>
+          {{/is}}
+        </h1> {{! / .element-heading }}
+
+        {{! Group }}
+        <div class="element-group flex justify-content-between align-items-center mb-4" data-editable>
+
+          {{! Author }}
+          <div class="element-author flex mr-auto" data-editable>
+
+            <div class="element-avatar avatar mr-2">
+              {{#if post.author.agent}}
+                <svg class="svg-icon absolute bottom-0 right-0 text-brand bg-base border border-white circle" aria-hidden="true">
+                  <use xlink:href="#icon-agent" />
+                </svg>
+              {{/if}}
+              <img class="avatar-img" alt="" src="{{post.author.avatar_url}}">
+            </div>
+
+            <div class="media-body align-self-center mr-2">
+
+              {{#link 'user_profile' class="element-link font-size-md font-medium" id=post.author.id}}
+                {{post.author.name}}
+              {{/link}}
+
+              {{#each post.author.badges}}
+                {{#is category_slug "titles"}}
+                  <div class="element-badge badge inline bg-brand text-brand-inverse py-1 pr-2 mx-2" title="{{description}}" aria-label="{{name}}">
+                    {{#if icon_url}}
+                      <img src="{{icon_url}}" alt="{{description}}" />
+                    {{/if}}
+                    {{name}}
+                  </div>
+                {{/is}}
+              {{/each}}
+
+              {{#each post.author.badges}}
+                {{#is category_slug "achievements"}}
+                  {{#if icon_url}}
+                    <img width="22" height="22" src="{{icon_url}}" alt="{{name}}" title="{{name}} | {{description}}" aria-label="{{name}}" />
+                  {{/if}}
+                {{/is}}
+              {{/each}}
+
+              <ul class="list-divider mb-0">
+                {{#if post.editor}}
+                  <li>
+                    <p class="element-paragraph inline my-0 font-size-sm text-subtle">
+                      {{t 'edited'}} {{date post.edited_at timeago=true}}
+                    </p>
+                  </li>
+                {{else}}
+                  <li>
+                    <p class="element-paragraph inline my-0 font-size-sm text-subtle">
+                      {{date post.created_at timeago=true}}
+                    </p>
+                  </li>
+                {{/if}}
+                {{#if comments}}
+                  <li>
+                    <a class="element-link font-size-sm" href="#comments">
+                      {{t 'comments_count' count=post.comment_count}}
+                    </a>
+                  </li>
+                {{/if}}
+              </ul>
+
+            </div> {{! / .post-metadata }}
+
+          </div> {{! / .element-author }}
+
+          {{! Subscribe link }}
+          {{#if settings.show_subscribe}}
+            <div class="element-subscribe subscribe-post ml-2 js-subscribe" data-class="button button-sm button-outline-brand" data-editable>
+              {{subscribe}}
+            </div>
+          {{/if}}
+
+          {{! Comment actions }}
+          <div class="actions-comment js-actions" data-class="element-button not-a-button py-1 px-2 ml-2 circle cursor-pointer transition hover:bg-subtle">
+            {{#with post}}
+              {{#actions}}
+                <svg class="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              {{/actions}}
+            {{/with}}
+          </div>
+
+        </div>  {{! / .element-group }}
+
+        {{! Content }}
+        <div class="element-content post-content content mb-4" data-editable>
+          {{post.details}}
+        </div> {{! / .element-content }}
+
+        {{! Content tags }}
+        <div class="element-content-tags" data-editable>
+          {{#if (compare post.content_tags.length ">" 0)}}
+            <p class="element-paragraph mb-3 font-bold">
+              {{t 'content_tags_label'}}
+            </p>
+            <ul class="list-divider">
+              {{#each post.content_tags}}
+                <li data-divider="|">
+                  {{#link "search_result" class='element-link' content_tag_id=id}}
+                    {{name}}
+                  {{/link}}
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div> {{! / .element-content-tags }}
+
+        {{! Row }}
+        <div class="element-row row align-items-center" data-editable>
+
+          {{! Column }}
+          <div class="element-column col" data-editable>
+
+            {{! Voting }}
+            <div class="element-voting voting-post pb-4" data-editable>
+              {{#with post}}
+                <div class="button-group" role="group">
+                  {{#vote 'up' class='button button-outline-brand button-sm px-2 py-1' selected_class='is-active' role='radio'}}
+                    <svg class="svg-icon rotate-180" aria-hidden="true">
+                      <use xlink:href="#icon-chevron-down" />
+                    </svg>
+                  {{/vote}}
+                  {{#vote 'down' class='button button-outline-brand button-sm px-2 py-1' selected_class='is-active' role='radio'}}
+                    <svg class="svg-icon" aria-hidden="true">
+                      <use xlink:href="#icon-chevron-down" />
+                    </svg>
+                  {{/vote}}
+                </div>
+                {{vote 'sum' class='element-paragraph font-size-sm text-subtle ml-2'}}
+              {{/with}}
+            </div> {{! / .element-voting }}
+
+          </div> {{! / .element-column }}
+
+          {{! Column }}
+          <div class="element-column col text-right" data-editable>
+
+            {{! Sharing }}
+            {{#if settings.show_sharing}}
+              <div class="element-sharing post-sharing" data-editable>
+                {{share}}
+              </div>
+            {{/if}} {{! / .element-sharing }}
+
+          </div> {{! / .element-column }}
+
+        </div> {{! / .element-row }}
+
+        {{! Comment list }}
+        <div class="element-comment-list comments" itemscope itemtype="http://schema.org/UserComments" data-editable>
+
+          {{! Comment header }}
+          <div class="border-top border-bottom py-2 mt-4 font-size-md">
+            <h3 class="element-heading mt-4 mb-2">
+              {{t 'comments'}}
+            </h3>
+            <div class="flex justify-content-between align-items-baseline text-subtle">
+              <p class="element-paragraph">
+                {{t 'comments_count' count=post.comment_count}}
+              </p>
+              {{#if comments}}
+                <div class="dropdown" x-data="dropdown" x-bind="wrapper">
+                  <button class="element-button not-a-button py-1 font-size-md cursor-pointer" aria-haspopup="true" x-bind="trigger">
+                    {{t 'sort_by'}}
+                    <svg class="svg-icon" aria-hidden="true" :class="{ 'rotate-180': isExpanded }">
+                      <use xlink:href="#icon-chevron-down" />
+                    </svg>
+                  </button>
+                  <span class="dropdown-menu" role="menu" x-bind="menu">
+                    {{#each comment_sorters}}
+                      <a class="element-dropdown-item dropdown-item" aria-selected="{{selected}}" href="{{url}}" role="menuitem">
+                        {{name}}
+                      </a>
+                    {{/each}}
+                  </span>
+                </div>
+              {{/if}}
+            </div>
+          </div>
+
+          {{! Comments }}
+          {{#if comments}}
+            <div class="comment-list">
+              <ul class="list-unstyled list-bordered">
+                {{#each comments}}
+                  <li class="comment py-5 border-bottom{{#if official}} comment-official{{/if}}" id="{{anchor}}">
+
+                    {{! Comment author }}
+                    <div class="element-author media mb-3">
+                      <div class="element-avatar avatar mr-2">
+                        {{#if author.agent}}
+                          <svg class="svg-icon absolute bottom-0 right-0 text-brand bg-base border border-white circle" aria-hidden="true">
+                            <use xlink:href="#icon-agent" />
+                          </svg>
+                        {{/if}}
+                        <img class="avatar-img" src="{{author.avatar_url}}" alt="Comment author">
+                      </div>
+
+                      <div class="media-body">
+                        {{#link 'user_profile' class="element-link font-size-md font-medium" title=author.name id=author.id}}
+                          {{author.name}}
+                        {{/link}}
+
+                        {{#each author.badges}}
+                          {{#is category_slug "titles"}}
+                            <div class="element-badge badge inline bg-brand text-brand-inverse py-1 pr-2 mx-2" title="{{description}}" aria-label="{{name}}">
+                              {{#if icon_url}}
+                                <img src="{{icon_url}}" alt="{{description}}" />
+                              {{/if}}
+                              {{name}}
+                            </div>
+                          {{/is}}
+                        {{/each}}
+
+                        {{#each author.badges}}
+                          {{#is category_slug "achievements"}}
+                            {{#if icon_url}}
+                              <img width="22" height="22" src="{{icon_url}}" alt="{{name}}" title="{{name}} | {{description}}" aria-label="{{name}}" />
+                            {{/if}}
+                          {{/is}}
+                        {{/each}}
+
+                        <ul class="list-divider mb-0">
+                          <li>
+                            <p class="element-paragraph inline my-0 font-size-sm text-subtle">
+                              {{#if editor}}
+                                {{t 'edited'}} {{date edited_at timeago=true}}
+                              {{else}}
+                                {{date created_at timeago=true}}
+                              {{/if}}
+                            </p>
+                          </li>
+                          {{#if official}}
+                            <li>
+                              <span class="element-badge badge badge-official">
+                                {{t 'official_comment'}}
+                              </span>
+                            </li>
+                          {{/if}}
+                        </ul>
+                      </div>
+
+                      {{! Comment actions }}
+                      <div class="actions-comment js-actions" data-class="element-button not-a-button py-1 px-2 circle cursor-pointer transition hover:bg-subtle">
+                        {{#actions}}
+                          <svg class="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        {{/actions}}
+                      </div>
+
+                    </div>
+
+                    {{#with ticket}}
+                      <a href="{{url}}" target="_zendesk_lotus" class="status-label escalation-badge">
+                        {{t 'request'}} {{id}}
+                      </a>
+                    {{/with}}
+                    {{#if pending}}
+                      <span class="element-badge badge badge-pending">
+                        {{t 'pending_approval'}}
+                      </span>
+                    {{/if}}
+
+                    {{! Comment content }}
+                    <div class="element-content post-content content font-size-md">
+                      {{body}}
+                    </div>
+
+                    {{! Comment voting }}
+                    {{#unless official}}
+                      <div class="element-voting comment-voting">
+                        <div class="button-group" role="group">
+                          {{#vote 'up' class='button button-outline-brand button-sm px-2 py-1' selected_class='is-active' role='radio'}}
+                            <svg class="svg-icon rotate-180" aria-hidden="true">
+                              <use xlink:href="#icon-chevron-down" />
+                            </svg>
+                          {{/vote}}
+                          {{#vote 'down' class='button button-outline-brand button-sm px-2 py-1' selected_class='is-active' role='radio'}}
+                            <svg class="svg-icon" aria-hidden="true">
+                              <use xlink:href="#icon-chevron-down" />
+                            </svg>
+                          {{/vote}}
+                        </div>
+                        {{vote 'sum' class='element-paragraph font-size-sm text-subtle ml-2'}}
+                      </div>
+                    {{/unless}}
+
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
+
+          {{! Pagination }}
+          {{#if pagination}}
+            <div class="element-pagination pagination my-6 js-pagination">
+              {{pagination}}
+            </div>
+          {{/if}}
+
+        </div> {{! / .element-comment-list }}
+
+        {{! Comment form }}
+        <div class="element-form  my-4" data-editable>
+          {{#form 'comment' class='comment-form form'}}
+            <div x-data="{ showCommentField: false }">
+
+              <div class="element-group flex mt-5">
+                <div class="element-avatar avatar mr-3">
+                  {{user_avatar class='avatar-img'}}
+                </div>
+                <div class="media-body form-field mb-3" @click="showCommentField = true">
+                  {{wysiwyg 'body'}}
+                </div>
+              </div>
+
+              <div class="element-group hidden align-items-center justify-content-end mb-5" :class="{ 'flex': showCommentField, 'hidden': !showCommentField }">
+
+                {{! Official comment }}
+                <div class="form-field boolean inline-flex align-items-center mt-2 mb-0 mr-5">
+                  {{checkbox 'official' class="mb-2 mr-2"}}
+                  {{label 'official' class='white-space-no-wrap'}}
+                </div>
+
+                {{input type='submit' class='button button-brand'}}
+
+              </div>
+            </div>
+          {{/form}}
+        </div> {{! / .element-form }}
+
+        {{! Paragraph }}
+        <p class="element-paragraph" data-editable>
+          {{comment_callout}}
+        </p> {{! / .element-paragraph }}
+
+      </div> {{! / .element-column }}
+
+      {{! Sidebar right }}
+      <aside class="element-sidebar sidebar lg:sidebar-right lg:sidebar-sticky empty:hidden" x-data="sidebar" data-editable>
+
+        {{! Call to action }}
+        <div class="element-call-to-action" data-editable>
+          <div class="element-card card align-items-start p-5 mt-3 mb-7">
+            <h3 class="element-heading mt-0">
+              {{t 'suggest_new_post'}}
+            </h3>
+            {{link 'new_post' class='element-button button button-brand'}}
+          </div>
+        </div> {{! / .element-call-to-action }}
+
+      </aside> {{! / .element-sidebar }}
+
+    </div> {{! / .element-row }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('post-page', 'post-{{post.id}}');</script>

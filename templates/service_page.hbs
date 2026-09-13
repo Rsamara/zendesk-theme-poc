@@ -1,0 +1,38 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Breadcrumbs }}
+    <div class="element-breadcrumbs breadcrumbs my-6 js-breadcrumbs" id="breadcrumbs">
+      {{breadcrumbs}}
+    </div> {{! / .element-breadrcumbs }}
+
+    {{! Service Catalog Item }}
+    <div class="element-service-catalog-item mb-7" id="service-catalog-item">
+      <script type="module">
+        import { renderServiceCatalogItem } from "service-catalog";
+
+        const container = document.getElementById("service-catalog-item");
+        const id = window.location.pathname.split("/").pop()
+        const props = {
+          baseLocale: Theme.baseLocale,
+          hasAtMentions: {{json help_center.at_mentions_enabled}},
+          userId: User.id,
+          userRole: User.role,
+          brandId: {{json brand.id}},
+          organizations: {{json user.organizations}},
+          serviceCatalogItemId: window.location.pathname.split("/").pop(),
+          helpCenterPath: Theme.urls.homePage,
+        }
+
+        renderServiceCatalogItem(container, Theme.settings, props);
+      </script>
+    </div> {{! /.element-service-catalog-item }}
+
+  </div> {{! /.element-container }}
+
+</div> {{! / #page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('service-page');</script>

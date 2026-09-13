@@ -1,0 +1,692 @@
+  {{! Footer container }}
+  <div class="relative" id="footer-container">
+
+    {{! Footer }}
+    <footer class="element-footer footer color-scheme-tertiary font-size-sm bg-base" id="footer">
+
+      {{! Container }}
+      <div class="element-container container py-8" data-editable>
+
+        <div class="element-row row-footer">
+
+          <div class="element-column col-12 md:col-3 content-align:left">
+
+            <img class="mb-2 h-7" src="{{settings.logo}}" alt="" />
+
+            <p class="element-paragraph">
+              Your digital partner for running a successful window covering business.
+            </p>
+
+          </div>
+<!--
+          <div class="element-column col-12 md:col-3">
+            <h4 class="element-heading text-white font-size-base font-medium md:mt-0">
+              Support
+            </h4>
+            <ul class="element-list list-unstyled">
+              <li>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="/">
+                  Help Center
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Contact Us
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  System Status
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Submit Feedback
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="element-column col-12 md:col-3">
+            <h4 class="element-heading text-white font-size-base font-medium md:mt-0">
+              Resources
+            </h4>
+            <ul class="element-list list-unstyled">
+              <li>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Documentation
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Training Center
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Community Forums
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  API Reference
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="element-column col-12 md:col-3">
+            <h4 class="element-heading text-white font-size-base font-medium md:mt-0">
+              Company
+            </h4>
+            <ul class="element-list list-unstyled">
+              <li>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="/">
+                  About Hunter Douglas
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Careers
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Privacy Policy
+                </a>
+                <a class="element-link block mb-2 text-inherit hover:text-brand hover:no-underline" href="#">
+                  Terms of Service
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+-->
+        <div class="mt-6 pt-4 border-top text-center">
+          <p class="element-paragraph">
+            © 2026 Hunter Douglas. All rights reserved.
+          </p>
+
+          {{! Language selector }}
+          {{#is settings.language_selector_location 'footer'}}
+            {{#if alternative_locales}}
+              <div class="dropdown" x-data="dropdown" x-bind="wrapper" data-editable>
+                <button class="element-nav-link nav-link not-a-button" aria-haspopup="true" x-bind="trigger">
+                  <svg class="svg-icon mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 12H22M2 12C2 17.5228 6.47715 22 12 22M2 12C2 6.47715 6.47715 2 12 2M22 12C22 17.5228 17.5228 22 12 22M22 12C22 6.47715 17.5228 2 12 2M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22M12 2C9.49872 4.73835 8.07725 8.29203 8 12C8.07725 15.708 9.49872 19.2616 12 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {{current_locale.name}}
+                  <svg class="svg-icon" aria-hidden="true" :class="{ 'rotate-180': isExpanded }">
+                    <use xlink:href="#icon-chevron-down" />
+                  </svg>
+                </button>
+                <div class="dropdown-menu" role="menu" x-cloak x-bind="menu">
+                  {{#each alternative_locales}}
+                    <a class="dropdown-item" href="{{url}}" dir="{{direction}}" rel="nofollow">
+                      {{name}}
+                    </a>
+                  {{/each}}
+                </div>
+              </div>
+            {{/if}}
+          {{/is}}
+
+        </div>
+
+      </div> {{! / .element-container }}
+
+    </footer> {{! /.footer }}
+
+  </div> {{! /#footer-container }}
+
+</div> {{! /.layout from the header.hbs template }}
+
+<script type="text/javascript" src="{{asset 'elements.min.js'}}"></script>
+<script type="text/javascript" src="{{asset 'script-animations.min.js'}}"></script>
+<script type="text/javascript" src="{{asset 'script-transitions.min.js'}}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
+
+<script type="module">
+  import { renderFlashNotifications } from 'flash-notifications';
+  renderFlashNotifications(Theme.settings, Theme.baseLocale);
+</script>
+
+{{! Call-to-actions }}
+{{~#isnt settings.cta_location 'none'}}
+  {{~#is settings.cta_style 'banner'}}
+    <script type="text/template" id="tmpl-call-to-action">
+      <div class="element-group bg-cta bg-cover bg-center">
+        <div class="element-group py-8 bg-subtle">
+          <div class="element-container container text-center">
+            <% if (heading) { %>
+              <h3 class="element-heading h2 my-0 lg:font-size-3xl">
+                <%= heading %>
+              </h3>
+            <% } %>
+            <% if (body) { %>
+              <p class="element-paragraph mt-3 mb-0 font-size-lg">
+                <%= body %>
+              </p>
+            <% } %>
+            <% if (link_text) { %>
+              <a class="element-button button button-brand button-lg mt-5" href="<%= link_url %>">
+                <%= link_text %>
+              </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </script>
+  {{/is~}}
+  {{~#is settings.cta_style 'card-background-color'}}
+    <script type="text/template" id="tmpl-call-to-action">
+      <div class="element-container container">
+        <div class="element-card card block my-7 border-0 bg-cta bg-cover bg-center">
+          <div class="element-group p-7 bg-base w-full">
+            <% if (heading) { %>
+              <h3 class="element-heading h2 my-0 lg:font-size-3xl">
+                <%= heading %>
+              </h3>
+            <% } %>
+            <% if (body) { %>
+              <p class="element-paragraph mt-3 mb-0 font-size-lg">
+                <%= body %>
+              </p>
+            <% } %>
+            <% if (link_text) { %>
+              <a class="element-button button button-brand mt-5" href="<%= link_url %>">
+                <%= link_text %>
+              </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </script>
+  {{/is~}}
+  {{~#is settings.cta_style 'card-background-image'}}
+    <script type="text/template" id="tmpl-call-to-action">
+      <div class="element-container container">
+        <div class="element-card card block my-7 border-0">
+          <div class="p-7 h-full w-full bg-cta bg-cover bg-center">
+            <% if (heading) { %>
+              <h3 class="element-heading h2 my-0 lg:font-size-3xl">
+                <%= heading %>
+              </h3>
+            <% } %>
+            <% if (body) { %>
+              <p class="element-paragraph mt-3 mb-0 font-size-lg">
+                <%= body %>
+              </p>
+            <% } %>
+            <% if (link_text) { %>
+              <a class="element-button button button-brand mt-5" href="<%= link_url %>">
+                <%= link_text %>
+              </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </script>
+  {{/is~}}
+  {{~#is settings.cta_style 'card-block-image'}}
+    <script type="text/template" id="tmpl-call-to-action">
+      <div class="element-container container">
+        <div class="element-card card my-7 border-0">
+          <div class="element-row row col-gap-sm">
+            <div class="element-column p-9 col-12 relative bg-cta bg-center bg-cover sm:col-6"></div>
+            <div class="element-column p-6 col-12 sm:col-6 sm:px-6 sm:py-8">
+              <% if (heading) { %>
+                <h3 class="element-heading h2 my-0 lg:font-size-3xl">
+                  <%= heading %>
+                </h3>
+              <% } %>
+              <% if (body) { %>
+                <p class="element-paragraph mt-3 mb-0 font-size-lg">
+                  <%= body %>
+                </p>
+              <% } %>
+              <% if (link_text) { %>
+                <a class="element-button button button-brand button-lg mt-5" href="<%= link_url %>">
+                  <%= link_text %>
+                </a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+  {{/is~}}
+  {{~#is settings.cta_style 'sidebar'}}
+    <script type="text/template" id="tmpl-call-to-action">
+      <div class="element-card card align-items-start p-6 my-5 bg-subtle border-0">
+        <% if (heading) { %>
+          <h3 class="element-heading my-0">
+            <%= heading %>
+          </h3>
+        <% } %>
+        <% if (body) { %>
+          <p class="element-paragraph mt-3 mb-0">
+            <%= body %>
+          </p>
+        <% } %>
+        <% if (link_text) { %>
+          <a class="element-button button button-brand mt-4" href="<%= link_url %>">
+            <%= link_text %>
+          </a>
+        <% } %>
+      </div>
+    </script>
+  {{/is~}}
+{{/isnt~}}
+
+{{! Article list }}
+{{~#contains (concat settings.category_sidebar settings.section_sidebar settings.article_sidebar) 'article-list'}}
+  <script type="text/template" id="tmpl-sidebar-article-list">
+    <% const breakpoint = get('breakpoint', 'lg'); %>
+    <% const activeSectionId = get('activeSectionId', null); %>
+    <div
+      class="element-group mt-5 border-top border-bottom <%= breakpoint %>:border-0 <%= breakpoint %>:mb-7{{#isnt settings.animations 'none'}} animation animated animation:{{settings.animations}}{{/isnt}}"
+      x-data="navigation({ categories: [], sections: [],<% if (activeSectionId) { %> articles: { section_id: <%= activeSectionId %> }<% } %> })">
+      <div x-data="collapse({ breakpoint: '<%= breakpoint %>' })">
+        <h3 class="element-heading flex align-items-center justify-content-between my-3 font-size-lg <%= breakpoint %>:hidden" x-bind="trigger">
+          <%= Theme.l18n.categories %>
+          <svg class="svg-icon pointer-events-none ml-3 <%= breakpoint %>:hidden"  :class="(isExpanding || isExpanded) && 'rotate-180'" aria-hidden="true">
+            <use xlink:href="#icon-chevron-down" />
+          </svg>
+        </h3>
+        <div class="collapse" x-bind="collapse">
+          <ul class="element-list list-unstyled mb-0" x-show="!loading && categories.length">
+            <template x-for="(category, index) in categories" :key="category.id">
+              <li
+                :class="{ 'border-bottom': index < categories.length - 1, 'is-selected': category.isActive }"
+                x-html="await renderTemplate('sidebar-article-list-category-item', { categoryId: category.id })">
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="tmpl-sidebar-article-list-category-item">
+    <div class="flex align-items-center">
+      <a
+        class="element-nav-link flex-1 py-3 font-size-lg font-bold text-heading hover:text-brand hover:no-underline"
+        :class="{ 'text-brand is-selected': category.isActive }"
+        :href="category.html_url"
+        x-text="category.name"
+        x-on:click="toggleItem($event, category.id)">
+      </a>
+    </div>
+    <div class="collapse" :id="category.id" x-show="!isLoading(category.id)">
+
+      {{! Sections }}
+      <div x-show="hasItems(category.sections)">
+        <ul class="element-list list-unstyled pb-3 mb-0 font-size-md">
+          <template x-for="section<%= categoryId %> in category.sections" :key="section<%= categoryId %>.id">
+            <li
+              x-html="await renderTemplate('sidebar-article-list-section-item', {
+                categoryId: <%= categoryId %>,
+                sectionId: section<%= categoryId %>.id
+              })">
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="tmpl-sidebar-article-list-section-item">
+    <div class="relative flex align-items-center">
+      <a
+        class="element-nav-link block py-1 text-base font-medium hover:text-brand hover:no-underline"
+        :class="{ 'font-semibold text-brand is-selected': section<%= categoryId %>.isActive }"
+        :href="section<%= categoryId %>.html_url"
+        x-text="section<%= categoryId %>.name"
+        x-on:click="toggleItem($event, section<%= categoryId %>.id)">
+      </a>
+      <span class="inline-loader ml-2" x-show="isLoading(section<%= categoryId %>.id)"></span>
+    </div>
+    <div class="collapse" :id="section<%= categoryId %>.id" x-show="!isLoading(section<%= categoryId %>.id)">
+
+      {{! Subsections }}
+      <div x-show="hasItems(section<%= categoryId %>.sections)">
+        <div class="element-group py-1 pl-3 mb-0">
+          <ul class="list-unstyled mb-0">
+            <template x-for="section<%= sectionId %> in section<%= categoryId %>.sections" :key="section<%= sectionId %>.id">
+              <li
+                x-html="await renderTemplate('sidebar-article-list-section-item', {
+                  categoryId: <%= sectionId %>,
+                  sectionId: section<%= sectionId %>.id
+                })">
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+
+      {{! Articles }}
+      <div x-show="hasItems(section<%= categoryId %>.articles)">
+        <ul class="element-list list-unstyled pl-3 pt-1 pb-2 mb-0 font-size-sm">
+          <template x-for="article<%= sectionId %> in section<%= categoryId %>.articles" :key="article<%= sectionId %>.id">
+            <li>
+              <a
+                class="element-nav-link block pl-3 py-1 text-base border-left border-left-3 transition hover:border-left-brand hover:text-brand hover:no-underline"
+                :class="{ 'text-brand border-brand is-selected': article<%= sectionId %>.isActive }"
+                :href="article<%= sectionId %>.html_url"
+                x-text="article<%= sectionId %>.title">
+              </a>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
+  </script>
+{{/contains~}}
+
+{{! Section list }}
+{{~#contains (concat settings.category_sidebar settings.section_sidebar settings.article_sidebar) 'section-list'}}
+  <script type="text/template" id="tmpl-sidebar-section-list">
+    <% breakpoint = get('breakpoint', 'lg'); %>
+    <% activeSectionId = get('activeSectionId', null); %>
+    <div
+      class="element-group mt-5 border-top border-bottom <%= breakpoint %>:border-0 <%= breakpoint %>:mt-6 <%= breakpoint %>:mb-7{{#isnt settings.animations 'none'}} animation animated animation:{{settings.animations}}{{/isnt}}"
+      x-data="navigation({ categories: [], sections: [],<% if (activeSectionId) { %> articles: { section_id: <%= activeSectionId %> }<% } %> })">
+      <div x-data="collapse({ breakpoint: '<%= breakpoint %>' })">
+        <h3
+          class="element-heading flex align-items-center justify-content-between my-3 font-size-lg <%= breakpoint %>:hidden"
+          x-bind="trigger">
+          <%= Theme.l18n.toggleNavigation %>
+          <svg class="svg-icon bottom-0 ml-1" :class="{ 'rotate-180': (isExpanding || isExpanded) }" aria-hidden="true">
+            <use xlink:href="#icon-chevron-down" />
+          </svg>
+        </h3>
+        <div class="collapse" x-bind="collapse">
+          <ul class="element-list list-unstyled mb-0 w-full mr-5" x-show="!loading && categories.length">
+            <template x-for="(category, index) in categories" :key="category.id">
+              <li
+                x-html="await renderTemplate('section-list-category-item', {
+                  categoryId: category.id,
+                  breakpoint: '<%= breakpoint %>'
+                })">
+              </li>
+            </template>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </script>
+  <script type="text/template" id="tmpl-section-list-category-item">
+    <% const maxSections = get('maxSections', 5); %>
+    <a
+      class="element-nav-link hidden py-2 font-bold font-size-lg text-heading hover:text-brand <%= breakpoint %>:block"
+      :class="{ 'text-brand is-selected': category.isActive }"
+      :href="category.html_url"
+      x-text="category.name">
+    </a>
+    {{! Sections }}
+    <div x-show="category.isActive && hasItems(category.sections)">
+      <ul class="element-list list-unstyled py-1 font-size-md border-radius <%= breakpoint %>:px-5 <%= breakpoint %>:py-3 <%= breakpoint %>:my-1 <%= breakpoint %>:mr-5 <%= breakpoint %>:bg-subtle">
+        <template x-for="section<%= categoryId %> in category.sections.slice(0, <%= maxSections %>)" :key="section<%= categoryId %>.id">
+          <li
+            x-html="await renderTemplate('section-list-section-item', {
+              categoryId: <%= categoryId %>,
+              sectionId: section<%= categoryId %>.id
+            })">
+          </li>
+        </template>
+        <li x-show="category.sections.length > <%= maxSections %>">
+          <a class="element-nav-link flex align-items-center py-1 text-base hover:text-base" :href="category.html_url">
+            <span x-text="Util.i18n('more')"></span>
+            <svg class="svg-icon bottom-0 ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/template" id="tmpl-section-list-section-item">
+    <a
+      class="element-nav-link block py-2 text-base"
+      :class="{ 'font-semibold text-heading is-selected': section<%= categoryId %>.isActive }"
+      :href="section<%= categoryId %>.html_url"
+      x-text="section<%= categoryId %>.name">
+    </a>
+
+      {{! Subsections }}
+    <div x-show="hasItems(section<%= categoryId %>.sections)">
+      <ul class="element-list list-unstyled mb-0 pl-3 font-size-sm">
+        <template x-for="section<%= sectionId %> in section<%= categoryId %>.sections" :key="section<%= sectionId %>.id">
+          <li
+            x-html="await renderTemplate('section-list-section-item', {
+              categoryId: <%= sectionId %>,
+              sectionId: section<%= sectionId %>.id
+            })">
+          </li>
+        </template>
+      </ul>
+    </div>
+  </script>
+{{/contains~}}
+
+{{! Category list }}
+{{~#contains (concat settings.category_sidebar settings.section_sidebar settings.article_sidebar) 'category-list'}}
+  <script type="text/template" id="tmpl-sidebar-category-list">
+    <% const breakpoint = get('breakpoint', 'lg'); %>
+    <% const activeSectionId = get('activeSectionId', null); %>
+    <div
+      class="element-group mt-5 border border-radius <%= breakpoint %>:border-0 <%= breakpoint %>:my-6{{#isnt settings.animations 'none'}} animation animated animation:{{settings.animations}}{{/isnt}}"
+      x-data="navigation({ categories: [], sections: [],<% if (activeSectionId) { %> articles: { section_id: <%= activeSectionId %> }<% } %> })">
+      <div x-data="collapse({ breakpoint: '<%= breakpoint %>' })">
+        <h3
+          class="element-heading flex align-items-center justify-content-between m-3 font-size-lg <%= breakpoint %>:mt-0 <%= breakpoint %>:mx-0 <%= breakpoint %>:font-size-xl"
+          x-bind="trigger">
+          <%= Theme.l18n.categories %>
+          <svg class="svg-icon bottom-0 ml-1 <%= breakpoint %>:hidden" :class="{ 'rotate-180': (isExpanding || isExpanded) }" aria-hidden="true">
+            <use xlink:href="#icon-chevron-down" />
+          </svg>
+        </h3>
+        <div class="collapse" x-bind="collapse">
+          <div class="element-group px-4 pb-4 <%= breakpoint %>:p-0">
+            <ul class="element-list list-unstyled mb-0" x-show="!loading && categories.length">
+              <template x-for="(category, index) in categories" :key="category.id">
+                <li>
+                  <a
+                    class="element-nav-link flex flex-1 py-2 text-base hover:text-brand hover:no-underline"
+                    :class="{ 'font-bold text-brand is-selected': category.isActive }"
+                    :href="category.html_url"
+                    x-text="category.name">
+                  </a>
+                </li>
+              </template>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
+{{/contains~}}
+
+{{! Hero navigation }}
+<script type="text/template" id="tmpl-navigation-hero">
+  <% breakpoint = get('breakpoint', 'md'); %>
+  <% activeSectionId = get('activeSectionId', null); %>
+  <div x-data="navigation({ categories: [], sections: [],<% if (activeSectionId) { %> activeSectionId: <%= activeSectionId %><% } %> })">
+
+    {{! Categories }}
+    <div class="element-group my-5 <%= breakpoint %>:scroll-x">
+      <nav class="element-nav nav flex-no-wrap white-space-no-wrap <%= breakpoint %>:flex-wrap">
+        <template x-for="category in categories" :key="category.id">
+          <a
+            class="element-nav-link nav-link mb-1 border-radius font-size-md"
+            :class="{
+              'text-brand-inverse bg-brand font-semibold hover:text-brand-inverse hover:bg-brand is-selected': category.isActive,
+              'text-base font-medium hover:text-base hover:bg-translucent': !category.isActive
+            }"
+            :aria-selected="category.isActive"
+            :href="category.html_url"
+            x-text="category.name">
+          </a>
+        </template>
+      </nav>
+    </div>
+
+  </div>
+</script>
+
+{{! Built-in element data }}
+<script id="element-data" type="application/javascript">
+  {{! Popular keywords }}
+  {{~#isnt settings.popular_keywords_style 'none'~}}
+  Theme.elements['popular-keywords'] = {
+    style: {{json settings.popular_keywords_style}},
+    heading: {{#if settings.use_translations}}{{json (dc settings.popular_keywords_heading)}}{{else}}{{json settings.popular_keywords_heading}}{{/if}},
+    keywords: {{#if settings.use_translations}}{{json (dc settings.popular_keywords)}}{{else}}{{json settings.popular_keywords}}{{/if}},
+  };
+  {{~/isnt}}
+
+  {{! Custom blocks }}
+  {{~#isnt settings.custom_block_style 'none'~}}
+  Theme.elements['custom-blocks'] = {
+    blocks: [{
+      name: {{#if settings.use_translations}}{{json (dc settings.custom_block_1_title)}}{{else}}{{json settings.custom_block_1_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.custom_block_1_description)}}{{else}}{{json settings.custom_block_1_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.custom_block_1_url)}}{{else}}{{json settings.custom_block_1_url}}{{/if}},
+      image_url: {{json settings.custom_block_1_image}},
+    }, {
+      name: {{#if settings.use_translations}}{{json (dc settings.custom_block_2_title)}}{{else}}{{json settings.custom_block_2_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.custom_block_2_description)}}{{else}}{{json settings.custom_block_2_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.custom_block_2_url)}}{{else}}{{json settings.custom_block_2_url}}{{/if}},
+      image_url: {{json settings.custom_block_2_image}},
+    }, {
+      name: {{#if settings.use_translations}}{{json (dc settings.custom_block_3_title)}}{{else}}{{json settings.custom_block_3_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.custom_block_3_description)}}{{else}}{{json settings.custom_block_3_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.custom_block_3_url)}}{{else}}{{json settings.custom_block_3_url}}{{/if}},
+      image_url: {{json settings.custom_block_3_image}},
+    }, {
+      name: {{#if settings.use_translations}}{{json (dc settings.custom_block_4_title)}}{{else}}{{json settings.custom_block_4_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.custom_block_4_description)}}{{else}}{{json settings.custom_block_4_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.custom_block_4_url)}}{{else}}{{json settings.custom_block_4_url}}{{/if}},
+      image_url: {{json settings.custom_block_4_image}},
+    }],
+    image_width: {{json settings.custom_block_image_width}},
+    heading: {{#if settings.use_translations}}{{json (dc settings.custom_blocks_heading)}}{{else}}{{json settings.custom_blocks_heading}}{{/if}},
+    heading_alignment: {{json settings.home_heading_alignment}},
+    number_blocks: {{json settings.number_custom_blocks}},
+    number_columns: {{json settings.number_custom_block_columns}},
+    alignment: {{json settings.custom_block_alignment}},
+    color_scheme: {{json settings.color_scheme_custom_blocks}}
+  };
+  {{~/isnt}}
+
+  {{! Category list }}
+  {{~#isnt settings.content_block_style 'none'~}}
+  Theme.elements['content-blocks'] = {
+    images: [
+      {{json settings.content_block_1_image}},
+      {{json settings.content_block_2_image}},
+      {{json settings.content_block_3_image}},
+      {{json settings.content_block_4_image}},
+      {{json settings.content_block_5_image}},
+      {{json settings.content_block_6_image}},
+      {{json settings.content_block_7_image}},
+      {{json settings.content_block_8_image}}
+    ],
+    image_width: {{json settings.content_block_image_width}},
+    heading: {{#if settings.use_translations}}{{json (dc settings.content_blocks_heading)}}{{else}}{{json settings.content_blocks_heading}}{{/if}},
+    heading_alignment: {{json settings.home_heading_alignment}},
+    number_columns: {{json settings.number_content_block_columns}},
+    alignment: {{json settings.content_block_alignment}},
+    color_scheme: {{json settings.color_scheme_content_blocks}}
+  };
+  {{~/isnt}}
+
+  {{! Contact blocks }}
+  {{~#isnt settings.contact_block_style 'none'~}}
+  Theme.elements['contact-blocks'] = {
+    blocks: [{
+      name: {{#if settings.use_translations}}{{json (dc settings.contact_block_1_title)}}{{else}}{{json settings.contact_block_1_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.contact_block_1_description)}}{{else}}{{json settings.contact_block_1_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.contact_block_1_url)}}{{else}}{{json settings.contact_block_1_url}}{{/if}},
+      image_url: {{json settings.contact_block_1_image}},
+    }, {
+      name: {{#if settings.use_translations}}{{json (dc settings.contact_block_2_title)}}{{else}}{{json settings.contact_block_2_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.contact_block_2_description)}}{{else}}{{json settings.contact_block_2_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.contact_block_2_url)}}{{else}}{{json settings.contact_block_2_url}}{{/if}},
+      image_url: {{json settings.contact_block_2_image}},
+    }, {
+      name: {{#if settings.use_translations}}{{json (dc settings.contact_block_3_title)}}{{else}}{{json settings.contact_block_3_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.contact_block_3_description)}}{{else}}{{json settings.contact_block_3_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.contact_block_3_url)}}{{else}}{{json settings.contact_block_3_url}}{{/if}},
+      image_url: {{json settings.contact_block_3_image}},
+    }, {
+      name: {{#if settings.use_translations}}{{json (dc settings.contact_block_4_title)}}{{else}}{{json settings.contact_block_4_title}}{{/if}},
+      description: {{#if settings.use_translations}}{{json (dc settings.contact_block_4_description)}}{{else}}{{json settings.contact_block_4_description}}{{/if}},
+      html_url: {{#if settings.use_translations}}{{json (dc settings.contact_block_4_url)}}{{else}}{{json settings.contact_block_4_url}}{{/if}},
+      image_url: {{json settings.contact_block_4_image}},
+    }],
+    image_width: {{json settings.contact_block_image_width}},
+    heading: {{#if settings.use_translations}}{{json (dc settings.contact_blocks_heading)}}{{else}}{{json settings.contact_blocks_heading}}{{/if}},
+    heading_alignment: {{json settings.home_heading_alignment}},
+    number_blocks: {{json settings.number_contact_blocks}},
+    number_columns: {{json settings.number_contact_block_columns}},
+    alignment: {{json settings.contact_block_alignment}},
+    color_scheme: {{json settings.color_scheme_contact_blocks}}
+  };
+  {{~/isnt}}
+
+  {{! Promoted articles }}
+  {{~#isnt settings.promoted_article_list_style 'none'}}
+  Theme.elements['promoted-articles'] = {
+    heading: {{#if settings.use_translations}}{{json (dc settings.promoted_articles_heading)}}{{else}}{{json settings.promoted_articles_heading}}{{/if}},
+    heading_alignment: {{json settings.home_heading_alignment}},
+    list_style: {{#if settings.use_translations}}{{json (dc settings.promoted_article_list_style)}}{{else}}{{json settings.promoted_article_list_style}}{{/if}},
+    number_columns: {{json settings.promoted_article_list_columns}},
+    show_excerpt: {{json settings.show_promoted_article_excerpt}},
+    color_scheme: {{json settings.color_scheme_promoted_articles}}
+  };
+  {{/isnt~}}
+
+  {{! Promoted videos }}
+  {{~#if settings.promoted_video_ids}}
+  Theme.elements['promoted-videos'] = {
+    heading: {{#if settings.use_translations}}{{json (dc settings.promoted_videos_heading)}}{{else}}{{json settings.promoted_videos_heading}}{{/if}},
+    heading_alignment: {{json settings.home_heading_alignment}},
+    video_ids: {{#if settings.use_translations}}{{json (dc settings.promoted_video_ids)}}{{else}}{{json settings.promoted_video_ids}}{{/if}},
+    number_columns: 3,
+    alignment: 'left'
+  };
+  {{/if~}}
+
+  {{! Recent activity }}
+  {{~#isnt settings.recent_activity 'none'}}
+  Theme.elements['recent-activity'] = {
+    heading_alignment: {{json settings.home_heading_alignment}},
+    number_columns: 3,
+    alignment: 'left'
+  };
+  {{/isnt~}}
+
+  {{! Call to actions }}
+  {{~#isnt settings.cta_style 'none'~}}
+  Theme.elements['call-to-action'] = {
+    heading: {{#if settings.use_translations}}{{json (dc settings.cta_element_heading)}}{{else}}{{json settings.cta_element_heading}}{{/if}},
+    heading_alignment: {{json settings.home_heading_alignment}},
+    body: {{#if settings.use_translations}}{{json (dc settings.cta_element_body)}}{{else}}{{json settings.cta_element_body}}{{/if}},
+    link_text: {{#if settings.cta_element_link_text}}{{#if settings.use_translations}}{{json (dc settings.cta_element_link_text)}}{{else}}{{json settings.cta_element_link_text}}{{/if}}{{else}}{{json (t 'submit_a_request')}}{{/if}},
+    link_url: Theme.urls.newRequestPage,
+    image_url: {{json settings.cta_block_image}},
+    color_scheme: {{json settings.color_scheme_cta}},
+  };
+  {{~/isnt}}
+
+  {{! Table of contents }}
+  {{~#isnt settings.table_of_contents_style 'none'~}}
+  Theme.elements['table-of-contents'] = Theme.elements['table-of-contents-sidebar'] = {
+    heading: {{#if settings.use_translations}}{{json (dc settings.table_of_contents_heading)}}{{else}}{{json settings.table_of_contents_heading}}{{/if}}
+  };
+  {{~/isnt}}
+
+  {{! Article navigation }}
+  {{#isnt settings.article_navigation_style 'none'}}
+  Theme.elements['article-navigation'] = {
+    previous_article_title: {{#if settings.use_translations}}{{json (dc settings.previous_article_title)}}{{else}}{{json settings.previous_article_title}}{{/if}},
+    next_article_title: {{#if settings.use_translations}}{{json (dc settings.next_article_title)}}{{else}}{{json settings.next_article_title}}{{/if}},
+  };
+  {{~/isnt}}
+</script>
+
+{{! Page builder data }}
+<script id="page-builder-data" type="application/json"></script>
+
+{{! Custom event that fires when all theme data is loaded }}
+<script type="text/javascript">
+  document.dispatchEvent(new CustomEvent('elements:init', {
+    detail: { relatedTarget: document }
+  }))
+</script>

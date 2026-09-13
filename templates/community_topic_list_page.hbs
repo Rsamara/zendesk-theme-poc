@@ -1,0 +1,307 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Row }}
+    <div class="element-row row align-items-center my-6" data-editable>
+
+      {{! Column }}
+      <div class="element-column col-12{{#is settings.header_search_style 'none'}} md:col-8{{/is}}" data-editable>
+
+        {{! Breadcrumbs }}
+        <div class="element-breadcrumbs breadcrumbs mb-3 md:m-0 js-breadcrumbs" id="breadcrumbs">
+          {{breadcrumbs}}
+        </div> {{! / .element-breadrcumbs }}
+
+      </div> {{! / .element-column }}
+
+      {{! Column }}
+      <div class="element-column col-12 md:col-4 empty:hidden" data-editable>
+
+        {{! Search }}
+        {{~#is settings.header_search_style 'none'}}
+          <div class="element-search search search-left" data-editable>
+            <h2 class="sr-only">{{t 'search' }}</h2>
+            {{~#if settings.search_placeholder}}
+              {{#if settings.use_translations}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=(dc settings.search_placeholder)}}
+              {{else}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=settings.search_placeholder}}
+              {{/if}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false}}
+            {{/if~}}
+            <svg class="search-icon transition" aria-hidden="true">
+              <use xlink:href="#icon-search" />
+            </svg>
+          </div>
+        {{/is~}} {{! / .element-search }}
+
+      </div> {{! / .element-column }}
+
+    </div> {{! / .element-row }}
+
+  </div> {{! / .element-container }}
+
+  {{! Container }}
+  <div class="element-container container relative z-10" data-editable>
+
+    {{! Group }}
+    <div class="element-group flex flex-wrap align-items-center justify-content-between mb-5" data-editable>
+
+      {{! Heading }}
+      <h1 class="element-heading my-0 text-{{settings.home_heading_alignment}} lg:font-size-3xl xl:font-size-4xl" data-editable>
+        {{t 'community_topics'}}
+      </h1> {{! /.element-heading }}
+
+      {{! Page navigation }}
+      <div class="element-page-navigation flex align-items-center my-3" data-editable>
+        {{#link 'posts' class='inline-flex align-items-center' role='menuitem'}}
+          {{t 'show_all_posts'}}
+          <svg class="svg-icon bottom-0 ml-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12H20M20 12L14 6M20 12L14 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        {{/link}}
+      </div> {{! /.element-page-navigation }}
+
+    </div> {{! /.element-group }}
+
+    {{! Topic list }}
+    <div class="element-topic-list mb-7" data-editable>
+
+      {{#if topics}}
+        <div class="element-row row col-gap-md justify-content-start">
+          {{#each topics}}
+            <div class="element-column col-12 text-center md:col-6 lg:col-4">
+              <div class="element-card card p-6 h-full{{#unless internal}} shadow transition hover:shadow-lg{{/unless}}">
+                <h3 class="element-heading mt-0 mb-3">
+                  <a class="link-stretched hover:no-underline text-inherit {{#if internal}}hover:text-inherit{{else}}hover:text-brand{{/if}}" href="{{url}}">
+                    {{name}}
+                  </a>
+                  {{~#if internal}}
+                    <svg class="svg-icon text-inherit ml-1" aria-hidden="true">
+                      <title>{{t 'internal'}}</title>
+                      <use xlink:href="#icon-internal" />
+                    </svg>
+                  {{/if~}}
+                </h3>
+                {{#if description}}
+                  <p class="element-paragraph mb-3">
+                    {{description}}
+                  </p>
+                {{/if}}
+                <ul class="list-divider justify-content-center mt-auto mb-0 font-size-md text-subtle">
+                  <li>
+                    {{t 'post_count' count=post_count}}
+                  </li>
+                  <li>
+                    {{t 'follower_count' count=follower_count}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+        {{else}}
+        <p class="element-paragraph mt-4 text-subtle font-size-md">
+          {{t 'no_content'}}
+        </p>
+      {{/if}}
+
+      {{! Pagination }}
+      {{#if pagination}}
+        <div class="element-pagination pagination my-6 js-pagination">
+          {{pagination}}
+        </div>
+      {{/if}}
+
+    </div> {{! /.element-topic-list }}
+
+  </div> {{! /.element-container }}
+
+  {{! Featured posts }}
+  <div class="element-featured-posts color-scheme-standard empty:hidden" data-editable>
+    {{#if featured_posts}}
+      <div class="element-group my-7">
+        <div class="element-container container">
+
+          {{! Heading }}
+          <h2 class="element-heading mt-0 text-{{settings.home_heading_alignment}} lg:font-size-2xl xl:font-size-3xl">
+            {{t 'featured_posts'}}
+          </h2>
+
+          {{! Posts }}
+          <div class="element-row row col-gap-md">
+            {{#each featured_posts}}
+              <div class="element-column col-12 md:col-6 lg:col-4">
+                <div class="element-card card p-6 h-full">
+
+                  <h3 class="element-heading my-0 md:font-size-xl">
+                    <a class="element-link text-inherit hover:no-underline" href="{{url}}">
+                      {{title}}
+                    </a>
+                  </h3>
+
+                  <ul class="list-divider mt-2 mb-4">
+                    <li>
+                      <p class="element-paragraph inline my-2 text-subtle font-size-sm">
+                        {{#if editor}}
+                          {{t 'edited'}} {{date edited_at timeago=true}}
+                        {{else}}
+                          {{date created_at timeago=true}}
+                        {{/if}}
+                      </p>
+                    </li>
+                    <li>
+                      <p class="element-paragraph inline my-2 text-subtle font-size-sm">
+                        {{vote_count}} {{t 'vote' count=vote_count}}
+                      </p>
+                    </li>
+                    <li>
+                      <p class="element-paragraph inline my-2 text-subtle font-size-sm">
+                        {{comment_count}} {{t 'comment' count=comment_count}}
+                      </p>
+                    </li>
+                  </ul>
+
+                  <p class="element-paragraph mb-4 text-base font-size-md">
+                    {{excerpt details}}
+                  </p>
+
+                  <div class="element-author article-author flex mt-auto" id="article-author">
+                    <div class="element-avatar avatar avatar-sm mr-2">
+                      {{#if author.agent}}
+                        <svg class="svg-icon absolute bottom-0 right-0 text-brand bg-base border border-white circle" aria-hidden="true">
+                          <use xlink:href="#icon-agent" />
+                        </svg>
+                      {{/if}}
+                      <img class="avatar-img" alt="{{author.name}}" src="{{author.avatar_url}}">
+                    </div>
+                    <div class="media-body align-self-center mr-2">
+                      {{#link 'user_profile' class="element-link font-size-md" id=author.id}}
+                        {{author.name}}
+                      {{/link}}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </div> {{! /.element-featured-posts }}
+
+  {{! Recent activity }}
+  {{#contains settings.recent_activity 'community'}}
+    <div class="element-recent-activity recent-activity js-recent-activity is-loading" data-editable>
+
+      {{! Cards style }}
+      {{#contains settings.recent_activity 'cards'}}
+        <script type="text/template">
+          <% if (activities.length) { %>
+            <div class="element-group my-7">
+              <div class="element-container container">
+                <% if (heading) { %>
+                  <h2 class="element-heading mt-0 text-{{settings.home_heading_alignment}} lg:font-size-2xl xl:font-size-3xl">
+                    <%= heading %>
+                  </h2>
+                <% } %>
+                <div class="element-row row col-gap-md <%= Util.classNames.row(3) %>">
+                  <% activities.forEach((activity, index) => { %>
+                    <div class="col-12">
+                      <div class="element-card card p-6 h-full">
+                        <a class="mb-2 font-size-sm" href="<%= activity.parent.html_url %>">
+                          <%= activity.parent.title %>
+                        </a>
+                        <h3 class="element-heading mt-0 mb-3">
+                          <a class="text-inherit hover:no-underline" href="<%= activity.html_url %>">
+                            <%= activity.title %>
+                          </a>
+                        </h3>
+                        <div class="element-group flex flex-wrap justify-content-between mt-auto">
+                          <p class="element-paragraph mb-0 mr-2 font-size-md text-subtle">
+                            <%= activity.date %>
+                          </p>
+                          <p class="element-paragraph flex align-items-center mb-0 font-size-md text-subtle">
+                            <svg class="svg-icon mr-1" xmlns="http://www.w3.org/2000/svg" width="12" height="12" focusable="false" viewBox="0 0 12 12">
+                              <path fill="none" stroke="currentColor" d="M1 .5h10c.3 0 .5.2.5.5v7c0 .3-.2.5-.5.5H6l-2.6 2.6c-.3.3-.9.1-.9-.4V8.5H1C.7 8.5.5 8.3.5 8V1C.5.7.7.5 1 .5z"></path>
+                            </svg>
+                            <span><%= activity.comment_count %></span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </script>
+      {{/contains}}
+
+      {{! List style }}
+      {{#contains settings.recent_activity 'list'}}
+        <script type="text/template">
+          <% if (activities.length) { %>
+            <div class="element-group my-7">
+              <div class="element-container container">
+                <% if (heading) { %>
+                  <h2 class="element-heading mt-0 text-{{settings.home_heading_alignment}}">
+                    <%= heading %>
+                  </h2>
+                <% } %>
+                <div class="element-row row col-gap-md <%= Util.classNames.row(3) %>">
+                  <% activities.forEach((activity, index) => { %>
+                    <div class="col-12">
+                      <h3 class="element-heading mt-3 mb-1 font-size-lg">
+                        <a class="text-inherit hover:no-underline" href="<%= activity.html_url %>">
+                          <%= activity.title %>
+                        </a>
+                      </h3>
+                      <p class="element-paragraph flex align-items-center flex-wrap mb-2 font-size-md">
+                        <svg class="svg-icon mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4 4V5.4C4 8.76031 4 10.4405 4.65396 11.7239C5.2292 12.8529 6.14708 13.7708 7.27606 14.346C8.55953 15 10.2397 15 13.6 15H20M20 15L15 10M20 15L15 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <a href="<%= activity.parent.html_url %>">
+                          <%= activity.parent.title %>
+                        </a>
+                      </p>
+                      <p class="element-paragraph mb-0 font-size-md text-subtle">
+                        <%= activity.date %>
+                      </p>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </script>
+      {{/contains}}
+
+      <div class="hidden">
+        {{#contains settings.recent_activity 'community'}}
+          {{recent_activity scope='community'}}
+        {{else}}
+          {{recent_activity}}
+        {{/contains}}
+      </div>
+    </div>
+  {{/contains}} {{! /.element-recent-activity }}
+
+  {{! Call to action }}
+  <div class="element-call-to-action py-8" data-editable>
+    <div class="element-container container text-center">
+      <h2 class="element-heading my-0">
+        {{t 'suggest_new_post'}}
+      </h2>
+      {{link 'new_post' class='element-button button button-brand mt-5' role='button'}}
+    </div>
+  </div> {{! /.element-call-to-action }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('community-topic-list-page');</script>

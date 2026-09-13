@@ -1,0 +1,608 @@
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+
+
+  <script type="text/javascript">
+  {{! User object }}
+  window.User = {
+    id: {{json user.id}},
+    role: {{json user.role}},
+    agent: {{json user.agent}},
+    signedIn: {{signed_in}},
+  };
+
+  {{#if user}}
+  fetch('/api/v2/users/me.json')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.user && data.user.user_fields) {
+        window.User.britePay = data.user.user_fields.brite_pay_support === true;
+        window.User.payPilot = data.user.user_fields.brite_pay_pilot === true;
+      }
+    });
+  {{/if}}
+
+
+  
+  {{! Theme object }}
+  window.Theme = Object.assign(window.Theme || {}, {
+    version: '3.0.0',
+
+    {{! Localization }}
+    locale: {{json help_center.locale}},
+    baseLocale: {{json help_center.base_locale}},
+
+    l18n: {
+      categories: {{json (t 'categories')}},
+      articles: {{json (t 'articles')}},
+      topics: {{json (t 'topics')}},
+      posts: {{json (t 'posts')}},
+      showAllArticles: {{json (t 'show_all_articles' count='{count}')}},
+      showAllSections: {{json (t 'see_all_sections')}},
+      more: {{json (t 'see_more')}},
+      empty: {{json (t 'empty')}},
+      close: {{json (t 'close')}},
+      search: {{json (t 'search')}},
+      clearSearch: {{json (t 'search_clear')}},
+      toggleNavigation: {{json (t 'toggle_navigation')}},
+    },
+
+    urls: {
+      homePage: {{json (page_path 'help_center')}},
+      newRequestPage: {{json (page_path 'new_request')}}
+    },
+    images: {
+      placeholder: {{json (asset 'placeholder.png')}},
+    },
+
+    {{! Settings (used by Garden components) }}
+    settings: {
+      brand_color: {{json settings.color_primary}},
+      brand_text_color: {{json settings.color_primary_inverse}},
+      text_color: {{json settings.color_text}},
+      link_color: {{json settings.color_link}},
+      hover_link_color: {{json settings.color_link}},
+      visited_link_color: {{json settings.color_link}},
+      background_color: {{json settings.bg_color}},
+      border_color: {{json settings.color_border}}
+    },
+
+    {{! CSS import map }}
+    css: {
+      'fancybox': 'https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.min.css',
+      'plyr': 'https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css',
+      'swiper': 'https://cdn.jsdelivr.net/npm/swiper@11.2.6/swiper-bundle.min.css'
+    },
+
+    {{! Elements }}
+    elements: {
+      notification: { {{~#if settings.notification_content}}
+        content: {{json (dc settings.notification_content)}},
+        icon: 'fa-regular fa-circle-question',
+        dismissible: true
+      {{/if~}} },
+      header: {
+        fixed: {{json settings.fixed_header}},
+        sticky: {{json settings.sticky_header}},
+        style: {{json settings.nav_style}},
+        layout: {{json settings.header_layout}},
+        breakpoint: {{json settings.nav_breakpoint}}
+      }
+    },
+
+    {{! Animation and transition effects }}
+    animations: {
+      '.hero-content': 'fade-in-up',
+      {{~#isnt settings.animations 'none'}}
+        {{~#contains settings.custom_block_style 'cards'}}'#custom-blocks .card': '{{settings.animations}}',{{/contains}}
+        {{~#contains settings.content_block_style 'cards'}}'#category-list .card': '{{settings.animations}}',{{/contains}}
+        {{~#contains settings.contact_block_style 'cards'}}'#contact-blocks .card': '{{settings.animations}}',{{/contains}}
+        '#promoted-videos .card': '{{settings.animations}}',
+      {{/isnt~}}
+    },
+    transitions: {}
+  });
+
+  // Load ES module polyfill for browsers that don't support ES modules
+  if (!(HTMLScriptElement.supports && HTMLScriptElement.supports('importmap'))) {
+    document.write('<script async src="{{asset 'es-modules.min.js'}}"><\/script>');
+  }
+
+  // Maybe enable dark mode
+  if (window.sessionStorage.getItem('dark-mode') === 'true') {
+    document.documentElement.classList.add('dark-mode')
+  }
+</script>  
+
+
+    <!-- Mavenoid -->
+<!--
+<script>
+  ;(function(m,a,v,e,n,o,i,d) {
+    d=m.createElement(a);d.async=true;d.src="https://widget-hosts.mavenoid.com/custom-embedding-scripts/"+n+".js";
+    i=m.getElementsByTagName(a)[0];i.parentNode.insertBefore(d,i);v[e]=v[e]||[];
+  })(document,"script",window,"mavenoid","hunter-douglas-dealer");
+</script>
+}   
+-->
+
+<script type="importmap">
+{
+  "imports": {
+    "new-request-form": "{{asset 'bundle-new-request-form.js'}}",
+    "request-list": "{{asset 'bundle-request-list.js'}}",
+    "flash-notifications": "{{asset 'bundle-flash-notifications.js'}}",
+    "service-catalog": "{{asset 'bundle-service-catalog.js'}}",
+    "approval-requests": "{{asset 'bundle-approval-requests.js'}}",
+    "approval-requests-translations": "{{asset 'bundle-approval-requests-translations.js'}}",
+    "new-request-form-translations": "{{asset 'bundle-new-request-form-translations.js'}}",
+    "request-list-translations": "{{asset 'bundle-request-list-translations.js'}}",
+    "service-catalog-translations": "{{asset 'bundle-service-catalog-translations.js'}}",
+    "shared": "{{asset 'bundle-shared.js'}}",
+    "ticket-fields": "{{asset 'bundle-ticket-fields.js'}}",
+    "wysiwyg": "{{asset 'bundle-wysiwyg.js'}}",
+    "fancybox": "https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/+esm",
+    "plyr": "https://cdn.jsdelivr.net/npm/plyr@3.7.8/+esm",
+    "swiper": "https://cdn.jsdelivr.net/npm/swiper@11.2.6/swiper-bundle.min.mjs"
+  }
+}
+</script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script type="text/javascript" src="{{asset 'util.js'}}"></script>
+
+<link rel="stylesheet" href="{{asset 'style-animations.css'}}">
+<link rel="stylesheet" href="{{asset 'style-transitions.css'}}">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+
+{{! Google fonts }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+{{! Text font }}
+{{~#is settings.text_font "'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Arimo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Bitter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Catamaran', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Crimson Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'DM Serif Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'EB Garamond', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Faustina', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Libre Franklin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Lora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Merriweather', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Merriweather Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Mukta Mahee', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Mukta+Mahee:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Noto Sans Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Noto Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Prata', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Prata&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'PT Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'PT Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Slabo 27px', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Slabo+27px&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Signika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300..700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Teko', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"}}
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+{{/is~}}
+{{~#is settings.text_font "'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+{{~/is~}}
+{{~#is settings.text_font "'Yeseva One', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+  <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+{{~/is~}}
+
+{{! Heading font }}
+{{#isnt settings.text_font settings.heading_font}}
+  {{~#is settings.text_font "'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Arimo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Bitter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Cabin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Catamaran', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Crimson Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'DM Serif Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'EB Garamond', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Faustina', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Faustina:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Jost', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Libre Franklin', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Lora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Merriweather', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Merriweather Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Mukta Mahee', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Mukta+Mahee:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Mulish', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Noto Sans Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Noto Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Prata', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Prata&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'PT Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'PT Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Slabo 27px', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Slabo+27px&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Signika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300..700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Teko', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"}}
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+  {{/is~}}
+  {{~#is settings.heading_font "'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  {{~/is~}}
+  {{~#is settings.heading_font "'Yeseva One', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif"~}}
+    <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+  {{~/is~}}
+{{/isnt}}
+
+{{! SVG icons and shapes }}
+<svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+  <symbol id="icon-search" viewBox="0 0 24 24">
+    <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></circle>
+    <path d="m21 21-4.3-4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+  </symbol>
+  <symbol id="icon-promoted" viewBox="0 0 426 405">
+    <polygon points="213 325 81 405 116 255 0 154 153 141 213 0 273 141 426 154 310 255 345 405" fill="currentColor" />
+  </symbol>
+  <symbol id="icon-chevron-down" viewBox="0 0 16 16">
+    <path fill="currentColor" d="M12.688 5.61a.5.5 0 01.69.718l-.066.062-5 4a.5.5 0 01-.542.054l-.082-.054-5-4a.5.5 0 01.55-.83l.074.05L8 9.359l4.688-3.75z" />
+  </symbol>
+  <symbol id="icon-agent" viewBox="0 0 12 12">
+    <path fill="currentColor" d="M6 0C2.7 0 0 2.7 0 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm2.3 7H3.7c-.3 0-.4-.3-.3-.5C3.9 7.6 4.9 7 6 7s2.1.6 2.6 1.5c.1.2 0 .5-.3.5z"/>
+  </symbol>
+  {{~#if signed_in}}
+    <symbol id="icon-internal" viewBox="0 0 16 16">
+      <rect width="12" height="9" x="2" y="7" fill="currentColor" rx="1" ry="1"/>
+      <path fill="none" stroke="currentColor" d="M4.5 7.5V4a3.5 3.5 0 017 0v3.5"/>
+    </symbol>
+  {{/if~}}
+
+  {{! SVG icons }}
+  <symbol id="icon-section" viewBox="0 0 24 24">
+    <path d="M13 7L11.8845 4.76892C11.5634 4.1268 11.4029 3.80573 11.1634 3.57116C10.9516 3.36373 10.6963 3.20597 10.4161 3.10931C10.0992 3 9.74021 3 9.02229 3H5.2C4.0799 3 3.51984 3 3.09202 3.21799C2.71569 3.40973 2.40973 3.71569 2.21799 4.09202C2 4.51984 2 5.0799 2 6.2V7M2 7H17.2C18.8802 7 19.7202 7 20.362 7.32698C20.9265 7.6146 21.3854 8.07354 21.673 8.63803C22 9.27976 22 10.1198 22 11.8V16.2C22 17.8802 22 18.7202 21.673 19.362C21.3854 19.9265 20.9265 20.3854 20.362 20.673C19.7202 21 18.8802 21 17.2 21H6.8C5.11984 21 4.27976 21 3.63803 20.673C3.07354 20.3854 2.6146 19.9265 2.32698 19.362C2 18.7202 2 17.8802 2 16.2V7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  {{! SVG shape dividers }}
+  {{#isnt settings.hero_element_shape 'none'}}
+    {{~#contains settings.hero_element_shape 'book'}}
+      <symbol id="shape-book" preserveAspectRatio="none" viewBox="0 0 1200 120">
+        <path d="M1200,0H0V120H281.94C572.9,116.24,602.45,3.86,602.45,3.86h0S632,116.24,923,120h277Z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'curves'}}
+      <symbol id="shape-curves" preserveAspectRatio="none" viewBox="0 0 240 24">
+        <path fill-opacity="0.33" d="M240,24V0H0v24C0,24,47.861,5.107,119.849,5.107C191.855,5.107,240,24,240,24z"/>
+        <path fill-opacity="0.33" d="M119.829,2.661c55.562,0,98.521,9.957,120.171,16.271V0H0v18.902 C21.582,12.598,64.37,2.65,119.829,2.661z"/>
+        <path d="M119.81,0.117c50.737,0,92.456,6.89,120.19,13.271V0H0v13.34C27.651,6.979,69.17,0.117,119.81,0.117z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'curve'}}
+      <symbol id="shape-curve" preserveAspectRatio="none" viewBox="0 0 100 100">
+        <path d="M0 100C16.667 34 33.333 2 50 2s33.333 32 50 98V0H0v100Z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'diagonal'}}
+      <symbol id="shape-diagonal" preserveAspectRatio="none" viewBox="0 0 1000 100">
+        <path d="M0,6V0h1000v100L0,6z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'hills'}}
+      <symbol id="shape-hills" preserveAspectRatio="none" viewBox="0 0 240 24">
+        <path fill-opacity=".33" d="M240 0v24c-69.5 0-73.2-14.8-98-17.8-24.7-3-49.9 4.3-69.8 4.2-19.2-.2-21.9-4.4-42-7.3C15.6.5 4.3 4.4 0 5V0h240Z"/>
+        <path fill-opacity=".33" d="M240 0v21c-51.8 0-73.2-11.8-98-14.8-24.7-3-49.9 2.3-69.8 2.2C53 8.2 50.3 6 30.2 3.1 15.6.5 4.3 1.4 0 2V0h240Z"/>
+        <path d="M240 0v19c-51.8 0-73.2-10.8-98-13.8-24.7-3-49.9 1.3-69.8 1.2C53 6.2 50.3 5 30.2 2.1 15.6-.5 4.3.4 0 1V0h240Z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'mountains'}}
+      <symbol id="shape-mountains" preserveAspectRatio="none" viewBox="0 0 1000 100">
+        <path opacity="0.33" d="M473,67.3c-203.9,88.3-263.1-34-320.3,0C66,119.1,0,59.7,0,59.7V0h1000v59.7 c0,0-62.1,26.1-94.9,29.3c-32.8,3.3-62.8-12.3-75.8-22.1C806,49.6,745.3,8.7,694.9,4.7S492.4,59,473,67.3z"/>
+        <path opacity="0.66" d="M734,67.3c-45.5,0-77.2-23.2-129.1-39.1c-28.6-8.7-150.3-10.1-254,39.1 s-91.7-34.4-149.2,0C115.7,118.3,0,39.8,0,39.8V0h1000v36.5c0,0-28.2-18.5-92.1-18.5C810.2,18.1,775.7,67.3,734,67.3z"/>
+        <path d="M766.1,28.9c-200-57.5-266,65.5-395.1,19.5C242,1.8,242,5.4,184.8,20.6C128,35.8,132.3,44.9,89.9,52.5C28.6,63.7,0,0,0,0 h1000c0,0-9.9,40.9-83.6,48.1S829.6,47,766.1,28.9z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'rays'}}
+      <symbol id="shape-rays" preserveAspectRatio="none" viewBox="0 0 2600 130.1">
+        <path d="M0 0L2600 0 2600 69.1 0 0z"/>
+        <path opacity="0.5" d="M0 0L2600 0 2600 69.1 0 69.1z"/>
+        <path opacity="0.25" d="M2600 0L0 0 0 130.1 2600 69.1z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'triangle'}}
+      <symbol id="shape-triangle" preserveAspectRatio="none" viewBox="0 0 1000 100">
+        <path d="M500,98.9L0,6.1V0h1000v6.1L500,98.9z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'waves'}}
+      <symbol id="shape-waves" preserveAspectRatio="none" viewBox="0 0 283.5 27.8">
+        <path d="M283.5,9.7c0,0-7.3,4.3-14,4.6c-6.8,0.3-12.6,0-20.9-1.5c-11.3-2-33.1-10.1-44.7-5.7 s-12.1,4.6-18,7.4c-6.6,3.2-20,9.6-36.6,9.3C131.6,23.5,99.5,7.2,86.3,8c-1.4,0.1-6.6,0.8-10.5,2c-3.8,1.2-9.4,3.8-17,4.7 c-3.2,0.4-8.3,1.1-14.2,0.9c-1.5-0.1-6.3-0.4-12-1.6c-5.7-1.2-11-3.1-15.8-3.7C6.5,9.2,0,10.8,0,10.8V0h283.5V9.7z M260.8,11.3 c-0.7-1-2-0.4-4.3-0.4c-2.3,0-6.1-1.2-5.8-1.1c0.3,0.1,3.1,1.5,6,1.9C259.7,12.2,261.4,12.3,260.8,11.3z M242.4,8.6 c0,0-2.4-0.2-5.6-0.9c-3.2-0.8-10.3-2.8-15.1-3.5c-8.2-1.1-15.8,0-15.1,0.1c0.8,0.1,9.6-0.6,17.6,1.1c3.3,0.7,9.3,2.2,12.4,2.7 C239.9,8.7,242.4,8.6,242.4,8.6z M185.2,8.5c1.7-0.7-13.3,4.7-18.5,6.1c-2.1,0.6-6.2,1.6-10,2c-3.9,0.4-8.9,0.4-8.8,0.5 c0,0.2,5.8,0.8,11.2,0c5.4-0.8,5.2-1.1,7.6-1.6C170.5,14.7,183.5,9.2,185.2,8.5z M199.1,6.9c0.2,0-0.8-0.4-4.8,1.1 c-4,1.5-6.7,3.5-6.9,3.7c-0.2,0.1,3.5-1.8,6.6-3C197,7.5,199,6.9,199.1,6.9z M283,6c-0.1,0.1-1.9,1.1-4.8,2.5s-6.9,2.8-6.7,2.7 c0.2,0,3.5-0.6,7.4-2.5C282.8,6.8,283.1,5.9,283,6z M31.3,11.6c0.1-0.2-1.9-0.2-4.5-1.2s-5.4-1.6-7.8-2C15,7.6,7.3,8.5,7.7,8.6 C8,8.7,15.9,8.3,20.2,9.3c2.2,0.5,2.4,0.5,5.7,1.6S31.2,11.9,31.3,11.6z M73,9.2c0.4-0.1,3.5-1.6,8.4-2.6c4.9-1.1,8.9-0.5,8.9-0.8 c0-0.3-1-0.9-6.2-0.3S72.6,9.3,73,9.2z M71.6,6.7C71.8,6.8,75,5.4,77.3,5c2.3-0.3,1.9-0.5,1.9-0.6c0-0.1-1.1-0.2-2.7,0.2 C74.8,5.1,71.4,6.6,71.6,6.7z M93.6,4.4c0.1,0.2,3.5,0.8,5.6,1.8c2.1,1,1.8,0.6,1.9,0.5c0.1-0.1-0.8-0.8-2.4-1.3 C97.1,4.8,93.5,4.2,93.6,4.4z M65.4,11.1c-0.1,0.3,0.3,0.5,1.9-0.2s2.6-1.3,2.2-1.2s-0.9,0.4-2.5,0.8C65.3,10.9,65.5,10.8,65.4,11.1 z M34.5,12.4c-0.2,0,2.1,0.8,3.3,0.9c1.2,0.1,2,0.1,2-0.2c0-0.3-0.1-0.5-1.6-0.4C36.6,12.8,34.7,12.4,34.5,12.4z M152.2,21.1 c-0.1,0.1-2.4-0.3-7.5-0.3c-5,0-13.6-2.4-17.2-3.5c-3.6-1.1,10,3.9,16.5,4.1C150.5,21.6,152.3,21,152.2,21.1z"/>
+        <path d="M269.6,18c-0.1-0.1-4.6,0.3-7.2,0c-7.3-0.7-17-3.2-16.6-2.9c0.4,0.3,13.7,3.1,17,3.3 C267.7,18.8,269.7,18,269.6,18z"/>
+        <path d="M227.4,9.8c-0.2-0.1-4.5-1-9.5-1.2c-5-0.2-12.7,0.6-12.3,0.5c0.3-0.1,5.9-1.8,13.3-1.2 S227.6,9.9,227.4,9.8z"/>
+        <path d="M204.5,13.4c-0.1-0.1,2-1,3.2-1.1c1.2-0.1,2,0,2,0.3c0,0.3-0.1,0.5-1.6,0.4 C206.4,12.9,204.6,13.5,204.5,13.4z"/>
+        <path d="M201,10.6c0-0.1-4.4,1.2-6.3,2.2c-1.9,0.9-6.2,3.1-6.1,3.1c0.1,0.1,4.2-1.6,6.3-2.6 S201,10.7,201,10.6z"/>
+        <path d="M154.5,26.7c-0.1-0.1-4.6,0.3-7.2,0c-7.3-0.7-17-3.2-16.6-2.9c0.4,0.3,13.7,3.1,17,3.3 C152.6,27.5,154.6,26.8,154.5,26.7z"/>
+        <path d="M41.9,19.3c0,0,1.2-0.3,2.9-0.1c1.7,0.2,5.8,0.9,8.2,0.7c4.2-0.4,7.4-2.7,7-2.6 c-0.4,0-4.3,2.2-8.6,1.9c-1.8-0.1-5.1-0.5-6.7-0.4S41.9,19.3,41.9,19.3z"/>
+        <path d="M75.5,12.6c0.2,0.1,2-0.8,4.3-1.1c2.3-0.2,2.1-0.3,2.1-0.5c0-0.1-1.8-0.4-3.4,0 C76.9,11.5,75.3,12.5,75.5,12.6z"/>
+        <path d="M15.6,13.2c0-0.1,4.3,0,6.7,0.5c2.4,0.5,5,1.9,5,2c0,0.1-2.7-0.8-5.1-1.4 C19.9,13.7,15.7,13.3,15.6,13.2z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'wave'}}
+      <symbol id="shape-wave" preserveAspectRatio="none" viewBox="0 0 1000 100">
+        <path d="M421.9,6.5c22.6-2.5,51.5,0.4,75.5,5.3c23.6,4.9,70.9,23.5,100.5,35.7c75.8,32.2,133.7,44.5,192.6,49.7 c23.6,2.1,48.7,3.5,103.4-2.5c54.7-6,106.2-25.6,106.2-25.6V0H0v30.3c0,0,72,32.6,158.4,30.5c39.2-0.7,92.8-6.7,134-22.4  c21.2-8.1,52.2-18.2,79.7-24.2C399.3,7.9,411.6,7.5,421.9,6.5z"/>
+      </symbol>
+    {{/contains~}}
+    {{~#contains settings.hero_element_shape 'zigzag'}}
+      <symbol id="shape-zigzag" preserveAspectRatio="none" viewBox="0 0 1000 100">
+        <path d="M761.9,44.1L643.1,27.2L333.8,98L0,3.8V0l1000,0v3.9"/>
+      </symbol>
+    {{/contains~}}
+  {{/isnt}}
+</svg>
+
+{{! Built-in element styles }}
+<style id="element-styles">
+  .hero-content { visibility: hidden; }
+  {{~#isnt settings.animations 'none'~}}
+    {{~#contains settings.custom_block_style 'cards'}}#custom-blocks .card { visibility: hidden; }{{/contains}}
+    {{~#contains settings.content_block_style 'cards'}}#category-list .card { visibility: hidden; }{{/contains}}
+    {{~#contains settings.contact_block_style 'cards'}}#contact-blocks .card { visibility: hidden; }{{/contains}}
+    #promoted-videos .card { visibility: hidden; }
+  {{~/isnt~}}
+</style>
+
+{{! Custom page builder styles }}
+<style id="page-builder-styles"></style>
+
+{{! Custom page builder templates }}
+<div id="page-builder-templates">
+
+  {{! Breadcrumbs }}
+  <script type="text/template" id="tmpl-breadcrumbs">
+    <% if (links.length) { %>
+      <nav class="element-group mb-0" aria-label="<%= get('label', '') %>">
+        <ol class="flex flex-wrap align-items-center pl-0 mb-0">
+          <% links.forEach((link, index) => { %>
+            <li class="inline-flex align-items-center">
+              <% if (index > 0) { %>
+                <svg class="svg-icon bottom-0 px-1 text-inherit rotate-270" aria-hidden="true">
+                  <use xlink:href="#icon-chevron-down" />
+                </svg>
+              <% } %>
+              <a class="element-link" href="<%= link.html_url %>" aria-current="<%= link.current ? 'true' : 'false' %>">
+                <%= link.title %>
+              </a>
+            </li>
+          <% }) %>
+        </ol>
+      </nav>
+    <% } %>
+  </script>
+
+  {{! Pagination }}
+  <script type="text/template" id="tmpl-pagination">
+    <% if (links.length) { %>
+      <nav>
+        <ul class="flex justify-content-center list-unstyled">
+          <% links.forEach((link, index) => { %>
+            <li class="<%= link.class_name %>">
+              <a class="element-button button button-outline-brand button-sm inline-flex mx-1" href="<%= link.html_url %>" rel="nofollow">
+                <% if ((link.class_name.includes('prev') || link.class_name.includes('first')) && link.icon) { %>
+                  <span class="mr-1"><%= link.icon %></span>
+                <% } %>
+                <span><%= link.title %></span>
+                <% if ((link.class_name.includes('next') || link.class_name.includes('last')) && link.icon) { %>
+                  <span class="ml-1"><%= link.icon %></span>
+                <% } %>
+              </a>
+            </li>
+          <% }) %>
+        </ul>
+      </nav>
+    <% } %>
+      </script>
+
+</div>
+                  
+
+
+
+                  

@@ -1,0 +1,39 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Breadcrumbs }}
+    <div class="element-breadcrumbs breadcrumbs my-6 js-breadcrumbs" id="breadcrumbs">
+      <nav>
+        <ol class="breadcrumbs">
+          <li>
+            <a href="{{help_center.url}}">
+              {{help_center.name}}
+            </a>
+          </li>
+          <li>
+            {{link 'approval_requests'}}
+          </li>
+        </ol>
+      </nav>
+    </div> {{! / .element-breadrcumbs }}
+
+    {{! Approval request list }}
+    <div class="element-approval-request-list" id="approval-request-list">
+      <script type="module">
+        import { renderApprovalRequestList } from 'approval-requests';
+
+        const container = document.getElementById('approval-request-list');
+        const props = { baseLocale: Theme.baseLocale };
+
+        renderApprovalRequestList(container, Theme.settings, props, Theme.urls.homePage);
+      </script>
+    </div> {{! /.element-approval-request-list }}
+
+  </div> {{! /.element-container }}
+
+</div> {{! / #page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('approval-request-list-page');</script>

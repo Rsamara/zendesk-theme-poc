@@ -1,0 +1,32 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Breadcrumbs }}
+    <div class="element-breadcrumbs breadcrumbs my-6 js-breadcrumbs" id="breadcrumbs">
+      {{breadcrumbs}}
+    </div> {{! / .element-breadrcumbs }}
+
+    {{! Heading }}
+    <h1 class="element-heading">
+      {{t 'services'}}
+    </h1> {{! /.element-heading }}
+
+    {{! Service Catalog }}
+    <div class="element-service-catalog mb-7" id="service-catalog">
+      <script type="module">
+        import { renderServiceCatalogList } from 'service-catalog';
+
+        const container = document.getElementById('service-catalog');
+
+        renderServiceCatalogList(container, Theme.settings, Theme.urls.homePage, Theme.baseLocale);
+      </script>
+    </div> {{! /.element-service-catalog }}
+
+  </div> {{! /.element-container }}
+
+</div> {{! / #page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('service-list-page');</script>

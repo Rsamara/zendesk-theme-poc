@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<link rel="icon" type="image/x-icon" href="#">
+<script type="text/javascript" src="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/an.js"></script>
+<script type="text/javascript" src="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/main.js"></script>
+<link rel="stylesheet" href="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/main.css">
+<div su-container="" ng-app="searchUnifyApp">
+  <su-app></su-app>
+</div>
+
+<!-- {{! Page container }}
+<div class="page-container" id="page-container"> 
+
+  {{! Group }}
+  <div class="element-group relative flex flex-column color-scheme-secondary bg-subtle" data-editable> 
+
+    {{! Container }}
+    <div class="element-container container" data-editable>  -->
+
+      <!-- {{! Search }}
+      {{~#is settings.header_search_style 'none'}}
+        <div class="element-search search search-left search-lg my-5" data-editable>
+          <h2 class="sr-only">{{t 'search' }}</h2>
+          {{~#if settings.search_placeholder}}
+            {{#if settings.use_translations}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=(dc settings.search_placeholder)}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=settings.search_placeholder}}
+            {{/if}}
+          {{else}}
+            {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false}}
+          {{/if~}}
+          <svg class="search-icon transition" aria-hidden="true">
+            <use xlink:href="#icon-search" />
+          </svg>
+        </div>
+      {{/is~}} {{! / .element-search }}
+
+    </div> {{! / .element-container }}
+
+  </div> {{! / .element-group }}
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Breadcrumbs }}
+    <div class="element-breadcrumbs breadcrumbs mt-6 mb-2 js-breadcrumbs" id="breadcrumbs">
+      {{breadcrumbs}}
+    </div> {{! / .element-breadrcumbs }}
+
+    {{! Row }}
+    <div class="element-row row col-gap-x-lg" data-editable>
+
+      {{! Column (content) }}
+      <div class="element-column col" data-editable>
+
+        {{! Generative Answers }}
+        <div class="element-generative-answers" data-editable>
+          {{generative_answers}}
+        </div> {{! / .element-generative-answers }}
+
+        {{! Search result list }}
+        <div class="element-search-result-list mb-7" id="search-result-list">
+
+          <h1 class="element-heading h3 pb-4 my-4 border-bottom lg:mt-6">
+            {{#is current_filter.identifier 'unified'}}
+              {{#if content_tag_filters }}
+                {{#each (filter content_tag_filters on="selected" equals=true)}}
+                  {{t 'results_content_tag' content_tag=name count=../results_count}}
+                {{/each}}
+              {{else}}
+                {{t 'results' query=query count=results_count}}
+              {{/if}}
+            {{else}}
+              {{#if content_tag_filters }}
+                {{#each (filter content_tag_filters on="selected" equals=true)}}
+                  {{t 'results_content_tag' content_tag=name count=../results_count}}
+                {{/each}}
+              {{else}}
+                {{#unless current_subfilter.identifier}}
+                  {{t 'results' query=query count=results_count}}
+                {{else}}
+                  {{t 'results_with_scope' query=query count=results_count scope_name=current_subfilter.name}}
+                {{/unless}}
+              {{/if}}
+            {{/is}}
+          </h1>
+
+          {{#if results}}
+            <ul class="list-unstyled list-bordered mb-0">
+              {{#each results}}
+                <li class="list-item">
+                  <article>
+                    <header>
+
+                      <h3 class="element-heading h4 mb-2">
+                        <a class="element-link text-inherit" href="{{url}}"{{#if is_external}} target="_blank"{{/if}}>
+                          {{title}}
+                          {{#if is_external}}
+                            <svg height="12" viewBox="0 0 12 12" aria-hidden="true">
+                              <path fill="none" stroke="currentColor" stroke-linecap="round" d="M10.5 8.5V10c0 .28-.22.5-.5.5H2c-.28 0-.5-.22-.5-.5V2c0-.28.22-.5.5-.5h1.5M6 6l4-4" />
+                              <path fill="currentColor" d="M10.5 6.5a.47.47 0 0 1-.35-.15l-4.5-4.5a.474.474 0 0 1-.11-.54C5.62 1.12 5.8 1 6 1h4c.55 0 1 .45 1 1v4c0 .2-.12.38-.31.46-.06.03-.13.04-.19.04z" />
+                            </svg>
+                          {{/if}}
+                        </a>
+                        {{#if vote_sum}}
+                          <div class="element-badge badge inline ml-2">
+                            <svg class="svg-icon mr-1" viewBox="0 0 12 12" aria-hidden="true">
+                              <g fill="none" stroke="currentColor">
+                                <path stroke-linejoin="round" d="M10.77 4.5a.73.73 0 01.73.73C11.43 7 11.21 11.5 10 11.5H5a.5.5 0 01-.5-.5V4.5s1-.5 1-3a1 1 0 012 0v3z"/>
+                                <rect width="2" height="7" x=".5" y="4.5" rx=".5" ry=".5"/>
+                              </g>
+                            </svg>
+                            {{vote_sum}}
+                          </div>
+                        {{/if}}
+                        {{#if comment_count}}
+                          <div class="element-badge badge inline ml-2">
+                            <svg class="svg-icon mr-1"  viewBox="0 0 12 12">
+                              <path fill="none" stroke="currentColor" d="M1 .5h10c.3 0 .5.2.5.5v7c0 .3-.2.5-.5.5H6l-2.6 2.6c-.3.3-.9.1-.9-.4V8.5H1C.7 8.5.5 8.3.5 8V1C.5.7.7.5 1 .5z"></path>
+                            </svg>
+                            {{comment_count}}
+                          </div>
+                        {{/if}}
+                      </h3>
+
+                      {{! Breadcrumbs }}
+                      <nav class="element-group mb-3 font-size-md" aria-label="
+                        {{~#is type 'article'}}{{t 'article_location_with_title' title=title}}{{/is~}}
+                        {{~#is type 'community_post'}}{{t 'post_location_with_title' title=title}}{{/is~}}
+                        {{~#is type 'external_content_record'}}{{t 'external_content_location_with_title' title=title}}{{/is~}}">
+                        <ol class="flex flex-wrap align-items-center pl-0 mb-0">
+                          {{#each path_steps}}
+                            <li class="inline-flex align-items-center" title="{{name}}">
+                              {{#unless @first}}
+                                <svg class="svg-icon bottom-0 px-1 text-inherit rotate-270" aria-hidden="true">
+                                  <use xlink:href="#icon-chevron-down" />
+                                </svg>
+                              {{/unless}}
+                              <a class="element-link" target="{{target}}" href="{{url}}">
+                                {{name}}
+                              </a>
+                            </li>
+                          {{/each}}
+                        </ol>
+                      </nav>
+
+                    </header>
+
+                    <p class="element-paragraph mb-3">
+                      {{text}}
+                    </p>
+
+                    <ul class="element-list list-divider mb-5 text-subtle font-size-md">
+                      {{#unless is_external}}
+                        {{#contains ../settings.article_metadata 'author'}}
+                          <li>
+                            {{#link 'user_profile' class="element-link" id=author.id}}
+                              {{author.name}}
+                            {{/link}}
+                          </li>
+                        {{/contains}}
+                      {{/unless}}
+                      <li>
+                        <p class="element-paragraph inline-block my-0">
+                          {{date created_at}}
+                        </p>
+                      </li>
+                    </ul>
+
+                  </article>
+                </li>
+              {{/each}}
+            </ul>
+          {{else}}
+            <p class="element-paragraph mt-4 text-subtle font-size-md">
+              {{t 'no_results_unified'}}
+              {{#link 'help_center'}}
+                {{t 'go_to_help_center'}}
+              {{/link}}
+            </p>
+          {{/if}}
+
+          {{! Pagination }}
+          {{#if pagination}}
+            <div class="element-pagination pagination my-6 js-pagination">
+              {{pagination}}
+            </div>
+          {{/if}}
+
+        </div> {{! / .element-search-result-list }}
+
+      </div> {{! / .element-column }}
+
+      {{! Sidebar left }}
+      <aside class="element-sidebar sidebar flex-first lg:sidebar-left lg:sidebar-sm lg:sidebar-sticky empty:hidden" x-data="sidebar" data-editable>
+
+        {{! Filters }}
+        <div class="element-filters font-size-md lg:mb-7" data-editable>
+
+          {{! Source filters }}
+          {{#if source_filters}}
+            <div
+              class="filter-list element-group py-3 my-5 border-top border-bottom lg:py-0 lg:my-6 lg:border-0"
+              x-data="collapse({ id: 'source-filters', breakpoint: 'lg' })">
+
+              <div class="element-group flex align-items-center justify-content-between" x-bind="trigger">
+                <h3 class="element-heading my-0 font-size-lg">
+                  {{t 'filter_source'}}
+                </h3>
+                <svg class="svg-icon bottom-0 ml-1 lg:hidden" :class="{ 'rotate-180': isExpanding || isExpanded }" aria-hidden="true">
+                  <use xlink:href="#icon-chevron-down" />
+                </svg>
+              </div>
+
+              <div class="collapse pt-3" x-bind="collapse">
+                <ul class="element-nav nav nav-pills flex-column flex-1" x-data="{ showAll: false }">
+                  {{#each source_filters}}
+                    <li>
+                      <a
+                        class="element-nav-link nav-link border-radius
+                          {{~#if selected}} font-semibold text-brand-inverse bg-brand hover:text-brand-inverse hover:bg-brand is-selected{{/if~}}
+                          {{~#if (compare @index '>' 4)}} hidden{{/if~}}"
+                        href="{{url}}"
+                        {{~#if selected}} aria-current="page"{{/if~}}
+                        {{~#if (compare @index '>' 4)}} :class="{ 'hidden': !showAll }"{{/if~}}>
+                        {{name}}
+                        <span class="ml-1 font-semibold">({{count}})</span>
+                      </a>
+                    </li>
+                  {{/each}}
+                  {{#if (compare source_filters.length ">" 5)}}
+                    <a
+                      class="element-nav-link nav-link flex align-items-center border-radius"
+                      href="#"
+                      :class="{ 'hidden': showAll }"
+                      @click.prevent="showAll = true">
+                      {{t 'show_more_sources'}}
+                      <svg class="svg-icon ml-1 bottom-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  {{/if}}
+                </ul>
+              </div>
+
+            </div>
+          {{/if}}
+
+          {{! Type filters }}
+          {{#if type_filters}}
+            <div
+              class="filter-list element-group py-3 my-5 border-top border-bottom lg:py-0 lg:my-6 lg:border-0"
+              x-data="collapse({ id: 'type-filters', breakpoint: 'lg' })">
+
+              <div class="element-group flex align-items-center justify-content-between" x-bind="trigger">
+                <h3 class="element-heading my-0 font-size-lg">
+                  {{t 'filter_type'}}
+                </h3>
+                <svg
+                  class="svg-icon bottom-0 ml-1 lg:hidden" :class="{ 'rotate-180': isExpanding || isExpanded }" aria-hidden="true">
+                  <use xlink:href="#icon-chevron-down" />
+                </svg>
+              </div>
+
+              <div class="collapse pt-3" x-bind="collapse">
+                <nav class="element-nav nav nav-pills flex-column flex-1">
+                  {{#each type_filters}}
+                    <a
+                      class="element-nav-link nav-link border-radius{{#if selected}} font-semibold text-brand-inverse bg-brand hover:text-brand-inverse hover:bg-brand is-selected{{/if}}"
+                      href="{{url}}"
+                      {{~#if selected}} aria-current="page"{{/if~}}>
+                      {{name}}
+                      <span class="ml-1 font-semibold">({{count}})</span>
+                    </a>
+                  {{/each}}
+                </nav>
+              </div>
+
+            </div>
+          {{/if}}
+
+          {{! Subfilters }}
+          {{#if subfilters}}
+            <div
+              class="filter-list element-group py-3 my-5 border-top border-bottom lg:py-0 lg:my-6 lg:border-0"
+              x-data="collapse({ id: 'subfilters', breakpoint: 'lg' })">
+
+              <div class="element-group flex align-items-center justify-content-between" x-bind="trigger">
+                <h3 class="element-heading my-0 font-size-lg">
+                  {{#is current_filter.identifier 'knowledge_base'}}
+                    {{t 'filter_by_category'}}
+                  {{/is}}
+                  {{#is current_filter.identifier 'community'}}
+                    {{t 'filter_by_topic'}}
+                  {{/is}}
+                </h3>
+                <svg class="svg-icon bottom-0 ml-1 lg:hidden" :class="{ 'rotate-180': isExpanding || isExpanded }" aria-hidden="true">
+                  <use xlink:href="#icon-chevron-down" />
+                </svg>
+              </div>
+
+              <div class="collapse pt-3" x-bind="collapse">
+                <nav class="element-nav nav nav-pills flex-column flex-1" x-data="{ showAll: false }">
+                  {{#each subfilters}}
+                    <a
+                      class="element-nav-link nav-link border-radius{{#if selected}} font-semibold text-brand-inverse bg-brand hover:text-brand-inverse hover:bg-brand is-selected{{/if}}{{#if (compare @index '>' 4)}} hidden{{/if}}"
+                      href="{{url}}"
+                      {{~#if selected}} aria-current="page"{{/if~}}
+                      {{~#if (compare @index '>' 4)}} :class="{ 'hidden': !showAll }"{{/if~}}>
+                      {{name}}
+                      <span class="ml-1 font-semibold">({{count}})</span>
+                    </a>
+                  {{/each}}
+                  {{#if (compare subfilters.length ">" 5)}}
+                    <a
+                      class="element-nav-link nav-link flex align-items-center border-radius"
+                      :class="{ 'hidden': showAll }"
+                      href="#"
+                      @click.prevent="showAll = true">
+                      {{#is current_filter.identifier 'knowledge_base'}}
+                        {{t 'show_more_categories'}}
+                      {{else}}
+                        {{t 'show_more_topics'}}
+                      {{/is}}
+                      <svg class="svg-icon ml-1 bottom-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </a>
+                  {{/if}}
+                </nav>
+              </div>
+
+            </div>
+          {{/if}}
+
+          {{! Content tag filters }}
+          {{#if content_tag_filters}}
+            <div
+              class="filter-list element-group py-3 my-5 border-top border-bottom lg:py-0 lg:my-6 lg:border-0"
+              x-data="collapse({ id: 'content-tags', breakpoint: 'lg' })">
+
+              <div class="element-group flex align-items-center justify-content-between" x-bind="trigger">
+                <h3 class="element-heading my-0 font-size-lg">
+                  {{t 'filter_content_tag'}}
+                </h3>
+                <svg class="svg-icon bottom-0 ml-1 lg:hidden" :class="{ 'rotate-180': isExpanding || isExpanded }" aria-hidden="true">
+                  <use xlink:href="#icon-chevron-down" />
+                </svg>
+              </div>
+
+              <div class="collapse pt-3" x-bind="collapse">
+                <div class="element-group">
+                  {{#each content_tag_filters}}
+                    <a
+                      class="element-badge badge mr-1 mb-1"
+                      href="{{url}}"
+                      {{~#if selected}} aria-current="page"{{/if~}}>
+                      {{name}}
+                    </a>
+                  {{/each}}
+                </div>
+              </div>
+
+            </div>
+          {{/if}}
+
+        </div> {{! / .element-filters }}
+
+      </aside> {{! / .element-sidebar }}
+
+    </div> {{! / .element-row }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('search-results-page');</script> -->

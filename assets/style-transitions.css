@@ -1,0 +1,109 @@
+.grow,
+.hover\:grow:hover,
+.group:hover .group-hover\:grow {
+  transform: scale(calc(1 + var(--transition-scale-factor, 0.05) * 1));
+}
+
+.shrink,
+.hover\:shrink:hover,
+.group:hover .group-hover\:shrink {
+  transform: scale(calc(1 - var(--transition-scale-factor, 0.05) * 1));
+}
+
+.hover\:bounce-in,
+.group-hover\:bounce-in {
+  transition-timing-function: cubic-bezier(0.77, 0, 0.2, 2.25);
+}
+
+.hover\:bounce-in:hover,
+.group:hover .group-hover\:bounce-in {
+  transform: scale(calc(1 + var(--transition-scale-factor, 0.05) * 1));
+}
+
+.hover\:bounce-out,
+.group-hover\:bounce-out {
+  transition-timing-function: cubic-bezier(0.47, 2.02, 0.31, -0.36);
+}
+
+.hover\:bounce-out:hover,
+.group:hover .group-hover\:bounce-out {
+  transform: scale(calc(1 - var(--transition-scale-factor, 0.05) * 1));
+}
+
+.rotate,
+.hover\:rotate:hover,
+.group:hover .group-hover\:rotate {
+  transform: rotate(var(--transition-rotate-factor, -4deg));
+}
+
+.grow-rotate,
+.hover\:grow-rotate:hover,
+.group:hover .group-hover\:grow-rotate {
+  transform: scale(calc(1 + var(--transition-scale-factor, 0.05) * 1)) rotate(var(--transition-rotate-factor, -4deg));
+}
+
+.float,
+.hover\:float,
+.group-hover\:float {
+  transition-timing-function: ease-out;
+}
+
+.float,
+.hover\:float:hover,
+.group:hover .group-hover\:float {
+  transform: translateY(-2px);
+}
+
+.sink,
+.hover\:shrink,
+.group-hover\:shrink {
+  transition-timing-function: ease-out;
+}
+
+.sink,
+.hover\:shrink:hover,
+.group:hover .group-hover\:shrink {
+  transform: translateY(calc(var(--transition-translate-factor, 0.5) * var(--spacing-4, 1rem)));
+}
+
+.skew,
+.hover\:skew:hover,
+.group:hover .group-hover\:skew {
+  transform: skew(var(--transition-skew-factor, -4deg));
+}
+
+.skew-forward,
+.hover\:skew-forward,
+.group-hover\:skew-forward {
+  transform-origin: 0 100%;
+}
+
+.skew-forward,
+.hover\:skew-forward:hover,
+.group:hover .group-hover\:skew-forward {
+  transform: skew(var(--transition-skew-factor, -4deg));
+}
+
+.skew-backward,
+.hover\:skew-backward,
+.group-hover\:skew-backward {
+  transform-origin: 0 100%;
+}
+
+.skew-backward,
+.hover\:skew-backward:hover,
+.group:hover .group-hover\:skew-backward {
+  transform: skew(calc(var(--transition-skew-factor, -4deg) * -1));
+}
+
+.forward,
+.hover\:forward:hover,
+.group:hover .group-hover\:forward {
+  transform: translateX(calc(var(--transition-translate-factor, 0.5) * var(--spacing-4, 1rem)));
+}
+
+.backward,
+.hover\:backward:hover,
+.group:hover .group-hover\:backward {
+  transform: translateX(calc(var(--transition-translate-factor, 0.5) * var(--spacing-4, 1rem) * -1));
+}

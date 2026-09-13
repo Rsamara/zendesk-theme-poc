@@ -1,0 +1,77 @@
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container text-center" data-editable>
+
+    {{! Content }}
+    <div class="element-content mt-8 mb-6" data-editable>
+
+      <h1 class="element-heading my-0">
+        {{#is error 'unauthorized'}}
+          {{link 'sign_in' class='text-inherit'}}
+        {{/is}}
+        {{#is error 'forbidden'}}
+          {{t 'not_authorized'}}
+        {{/is}}
+        {{#is error 'not_found'}}
+          {{t 'nonexistent_page'}}
+        {{/is}}
+      </h1>
+
+      {{#is error 'not_found'}}
+        <p class="element-paragraph mt-3 mb-0">
+          {{t 'mistyped_address_or_moved_page'}}
+        </p>
+      {{/is}}
+
+    </div> {{! / .element-content }}
+
+    {{! Button }}
+    <a class="element-button button button-brand inline-flex align-items-center" href="{{page_path 'help_center'}}" data-editable>
+      <svg class="svg-icon bottom-0 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9H16.5C18.9853 9 21 11.0147 21 13.5C21 15.9853 18.9853 18 16.5 18H12M3 9L7 5M3 9L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      {{t 'back_to_homepage'}}
+    </a> {{! / .element-button }}
+
+    {{! Row }}
+    <div class="element-row row" data-editable>
+
+      {{! Column }}
+      <div class="element-column col-12 mx-auto lg:col-7" data-editable>
+
+        {{! Promoted articles }}
+        {{#if promoted_articles}}
+          <div class="element-promoted-articles text-left" data-editable>
+            <div class="element-card card p-6 my-7">
+
+              {{! Heading }}
+              <h3 class="element-heading mt-0">
+                {{t 'promoted_articles'}}
+              </h3>
+
+              {{! Articles }}
+              <ul class="element-list list-unstyled mb-0">
+                {{#each promoted_articles}}
+                  <li>
+                    <a class="element-link block py-1" href="{{url}}">
+                      {{title}}
+                    </a>
+                  </li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        {{/if}} {{! / .element-promoted-articles }}
+
+      </div> {{! / .element-column }}
+
+    </div> {{! / .element-row }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! / #page-container }}
+
+<script type="text/javascript">
+  document.documentElement.classList.add('error-page');
+</script>

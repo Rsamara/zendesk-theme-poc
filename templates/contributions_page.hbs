@@ -1,0 +1,117 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Group }}
+  <div class="element-group bg-subtle" data-editable>
+
+    {{! Container }}
+    <div class="element-container container" data-editable>
+
+      {{! Page navigation }}
+      <nav class="element-page-navigation nav collapsible-nav font-size-md" x-data="collapsibleNav" data-editable>
+        {{link 'contributions' class='element-nav-link nav-link pt-4 pb-3 font-medium border-bottom border-bottom-3 border-bottom-brand hover:text-brand md:mr-3 is-selected' selected='true'}}
+        {{link 'subscriptions' class='element-nav-link nav-link pt-4 pb-3 font-medium border-bottom border-bottom-3 border-bottom-transparent hover:text-base hover:border-bottom-base'}}
+      </nav> {{! / .element-page-navigation }}
+
+    </div> {{! / .element-container }}
+
+  </div> {{! / .element-group }}
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Heading }}
+    <h1 class="element-heading mt-6" data-editable>
+      {{t 'contributions'}}
+    </h1> {{! / .element-heading }}
+
+    {{! Filters }}
+    <nav class="element-filters nav collapsible-nav mb-5 font-size-md border-bottom border-top md:border-top-0" x-data="collapsibleNav" data-editable>
+      {{#each filters}}
+        <a
+          class="element-nav-link nav-link pt-4 pb-3 font-medium border-bottom border-bottom-3
+            {{~#unless @last}} md:mr-3{{/unless~}}
+            {{~#if selected}} border-bottom-brand is-selected{{/if~}}
+            {{~#unless selected}} border-bottom-transparent hover:text-base hover:border-bottom-base{{/unless~}}"
+          {{~#if selected}} aria-selected="true"{{/if}} href="{{url}}">
+          {{name}}
+        </a>
+      {{/each}}
+    </nav> {{! / .element-filters }}
+
+    {{! Contribution list }}
+    <div class="element-contribution-list mb-7" id="contribution-list">
+
+      {{#if contributions}}
+        <table class="table table-flush table-contributions border-0">
+          <thead class="hidden md:table-header-group">
+            <tr>
+              <th class="element-heading">
+                {{t 'title'}}
+              </th>
+              <th class="element-heading">
+                {{t 'type'}}
+              </th>
+              <th class="element-heading">
+                {{t 'vote_sum'}}
+              </th>
+              <th class="element-heading">
+                {{t 'last_activity'}}
+              </th>
+              <th class="element-heading">
+                {{t 'created'}}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each contributions}}
+              <tr>
+                <td>
+                  <a class="element-link block" href="{{url}}" title="{{title}}">
+                    {{excerpt title characters=60}}
+                  </a>
+                </td>
+                <td class="hidden md:table-cell">
+                  <p class="element-paragraph my-0">
+                    {{type}}
+                  </p>
+                </td>
+                <td class="hidden md:table-cell">
+                  <p class="element-paragraph my-0">
+                    {{vote_sum}}
+                  </p>
+                </td>
+                <td class="hidden md:table-cell">
+                  <p class="element-paragraph my-0">
+                    {{date last_activity_at}}
+                  </p>
+                </td>
+                <td class="hidden md:table-cell">
+                  <p class="element-paragraph my-0">
+                    {{date created_at}}
+                  </p>
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="element-paragraph mt-4 text-subtle font-size-md">
+          {{t 'no_contributions'}}
+        </p>
+      {{/if}}
+
+      {{! Pagination }}
+      {{#if pagination}}
+        <div class="element-pagination pagination my-6 js-pagination">
+          {{pagination}}
+        </div>
+      {{/if}}
+
+    </div> {{! / .element-contribution-list }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('contributions-page');</script>

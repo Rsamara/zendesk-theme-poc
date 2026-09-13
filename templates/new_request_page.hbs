@@ -1,0 +1,124 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Breadcrumbs }}
+    <div class="element-breadcrumbs breadcrumbs my-6 js-breadcrumbs" id="breadcrumbs">
+      {{breadcrumbs}}
+    </div> {{! / .element-breadrcumbs }}
+
+    {{! Group }}
+    <div class="element-group max-w-md" data-editable>
+
+      {{! Heading element }}
+      <h1 class="element-heading mt-6" data-editable>
+        {{t 'submit_a_request'}}
+      </h1> {{! / .element-page-header }}
+
+      {{! New Request form }}
+      <div class="element-form mb-8 js-form{{#isnt settings.form_list_style 'standard'}} js-form-options{{/isnt}}" id="new-request">
+
+        {{! Boxes style }}
+        {{~#is settings.form_list_style 'cards'}}
+          <script type="text/template" id="tmpl-form-list">
+            <% if (options.length) { %>
+              <% if (label) { %>
+                <p class="element-paragraph">
+                  <%= label %>
+                </p>
+              <% } %>
+              <div class="element-row row col-gap-sm my-6">
+                <% options.forEach(option => { %>
+                  <div class="element-column col-12 md:col-6 lg:col-4 text-center">
+                    <a class="element-card card p-5 link-plain border-brand h-full text-brand hover:text-brand-inverse hover:bg-brand" href="<%= Theme.urls.newRequestPage %>?ticket_form_id=<%= option.value %>">
+                      <h4 class="element-heading m-0 font-medium text-inherit">
+                        <%= option.name %>
+                      </h4>
+                    </a>
+                  </div>
+                <% }); %>
+              </div>
+            <% } %>
+          </script>
+        {{/is~}}
+
+        {{! List style }}
+        {{~#is settings.form_list_style 'list'}}
+          <script type="text/template" id="tmpl-form-list">
+            <% if (options.length) { %>
+              <% if (label) { %>
+                <p class="element-paragraph">
+                  <%= label %>
+                </p>
+              <% } %>
+              <div class="element-card card bg-base my-6">
+                <% options.forEach((option, index) => { %>
+                  <div class="element-group relative flex align-items-center justify-content-between py-3 px-4<% if (index < options.length - 1) { %> border-bottom<% } %> hover:text-brand">
+                    <a class="element-link link-stretched text-base font-semibold hover:text-inherit hover:no-underline" href="<%= Theme.urls.newRequestPage %>?ticket_form_id=<%= option.value %>">
+                      <%= option.name %>
+                    </a>
+                    <svg class="svg-icon bottom-0" viewBox="0 0 12 12" aria-hidden="true">
+                      <path fill="currentColor" d="M3.646 10.354a.5.5 0 01-.057-.638l.057-.07L7.293 6 3.646 2.354a.5.5 0 01-.057-.638l.057-.07a.5.5 0 01.638-.057l.07.057 4 4a.5.5 0 01.057.638l-.057.07-4 4a.5.5 0 01-.708 0z" />
+                    </svg>
+                  </div>
+                <% }) %>
+              </div>
+            <% } %>
+          </script>
+        {{/is~}}
+
+      </div> {{! / .element-new-request-form }}
+
+    </div> {{! / .element-group }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! /#page-container }}
+
+<script type="module">
+  'use strict';
+
+  import { renderNewRequestForm } from 'new-request-form';
+
+  const container = document.querySelector('.js-form');
+
+  const templateData = {{json new_request_form}};
+  const formField = templateData.ticket_form_field;
+  const formId = formField.value;
+  const props = {
+    requestForm: templateData,
+    newRequestPath: Theme.urls.newRequestPage,
+    parentId: {{json parent.id}},
+    parentIdPath: {{json parent.url}},
+    locale: Theme.locale,
+    baseLocale: Theme.baseLocale,
+    hasAtMentions: {{json help_center.at_mentions_enabled}},
+    userId: User.id,
+    userRole: User.role,
+    brandId: {{json brand.id}},
+    organizations: {{json user.organizations}},
+    wysiwyg: true,
+    answerBotModal: {
+      answerBot: {{json answer_bot}},
+      answerBotGenerativeExperience: {{#if answer_bot_generative_experience}}{{json answer_bot_generative_experience}}{{else}}null{{/if}},
+      hasRequestManagement: {{json help_center.request_management_enabled}},
+      isSignedIn: User.signedIn,
+      helpCenterPath: Theme.urls.homePage,
+      requestsPath: {{json (page_path 'requests')}},
+      requestPath: {{json (page_path 'request' id=answer_bot.request_id)}}
+    }
+  };
+
+  {{! Show the request form(s) or custom form list style }}
+  const formListStyle = {{json settings.form_list_style}};
+  if (formListStyle !== 'standard' && !formId) {
+    const formFieldData = templateData.ticket_form_field;
+    Util.renderTemplate(container, 'form-list', { ... formFieldData });
+  } else {
+    renderNewRequestForm(Theme.settings, props, container);
+  }
+
+  document.documentElement.classList.add('new-request-page');
+</script>

@@ -1,0 +1,120 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Group }}
+  <div class="element-group bg-subtle" data-editable>
+
+    {{! Container }}
+    <div class="element-container container" data-editable>
+
+      {{! Page navigation }}
+      <nav class="element-page-navigation nav collapsible-nav font-size-md" x-data="collapsibleNav" data-editable>
+        {{link 'contributions' class='element-nav-link nav-link pt-4 pb-3 font-medium border-bottom border-bottom-3 border-bottom-transparent hover:text-base hover:border-bottom-base md:mr-3'}}
+        {{link 'subscriptions' class='element-nav-link nav-link pt-4 pb-3 font-medium border-bottom border-bottom-3 border-bottom-brand hover:text-brand is-selected' selected='true'}}
+      </nav> {{! / .element-page-navigation }}
+
+    </div> {{! / .element-container }}
+
+  </div> {{! / .element-group }}
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Heading }}
+    <h1 class="element-heading mt-6" data-editable>
+      {{t 'following'}}
+    </h1> {{! / .element-heading }}
+
+    {{! Filters }}
+    <div class="element-filters mb-5 font-size-md" data-editable>
+      <div class="dropdown" x-data="dropdown" x-bind="wrapper">
+        <button class="element-button flex align-items-center not-a-button py-2 cursor-pointer" aria-haspopup="true" x-bind="trigger">
+          {{current_filter.label}}
+          <svg class="svg-icon ml-1 bottom-0" aria-hidden="true" :class="{ 'rotate-180': isExpanded }">
+            <use xlink:href="#icon-chevron-down" />
+          </svg>
+        </button>
+        <div class="dropdown-menu" role="menu" x-bind="menu">
+          {{#each filters}}
+            <a class="element-dropdown-item dropdown-item" href="{{url}}" aria-selected="{{selected}}" role="menuitem">
+              {{name}}
+            </a>
+          {{/each}}
+        </div>
+      </div>
+    </div> {{! / .element-filters }}
+
+    {{! Subscription list }}
+    <div class="element-subscription-list mb-7" id="subscription-list">
+
+      {{#if subscriptions}}
+        <table class="table table-flush table-subscriptions border-0">
+          <thead class="hidden md:table-header-group">
+            <tr>
+              <th class="element-heading">
+                {{t 'title'}}
+              </th>
+              <th class="element-heading">
+                {{t 'type'}}
+              </th>
+              <th class="element-heading">
+                {{t 'subscription'}}
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each subscriptions}}
+              <tr>
+                {{#is type 'user'}}
+                  <td class="flex align-items-center">
+                    <img class="user-avatar avatar-img avatar-sm mr-1" src="{{avatar_url}}" alt="">
+                    <a class="element-link block" href="{{url}}" title="{{title}}">
+                      {{excerpt title characters=60}}
+                    </a>
+                  </td>
+                {{else}}
+                  <td>
+                    <a class="element-link block" href="{{url}}" title="{{title}}">
+                      {{excerpt title characters=60}}
+                    </a>
+                  </td>
+                {{/is}}
+
+                <td class="hidden md:table-cell">
+                  <p class="element-paragraph my-0">
+                    {{name}}
+                  </p>
+                </td>
+                <td class="hidden md:table-cell">
+                  <p class="element-paragraph my-0">
+                    {{following}}
+                  </p>
+                </td>
+                <td class="subscribe-activity js-subscribe py-1 px-0" data-class="element-button button button-sm button-outline-brand">
+                  {{subscribe}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <p class="element-paragraph mt-4 text-subtle font-size-md">
+          {{t 'not_following'}}
+        </p>
+      {{/if}}
+
+      {{! Pagination }}
+      {{#if pagination}}
+        <div class="element-pagination pagination my-6 js-pagination">
+          {{pagination}}
+        </div>
+      {{/if}}
+
+    </div> {{! / .element-subscription-list }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('subscriptions-page');</script>

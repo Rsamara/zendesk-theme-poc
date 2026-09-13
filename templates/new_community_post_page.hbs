@@ -1,0 +1,136 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Group }}
+  <div class="element-group relative flex flex-column color-scheme-tertiary bg-subtle" data-editable>
+
+    {{! Container }}
+    <div class="element-container container" data-editable>
+
+      {{! Search }}
+      {{~#is settings.header_search_style 'none'}}
+        <div class="element-search search search-left search-lg search-button-inside search-shadow my-5" data-editable>
+          <h2 class="sr-only">{{t 'search' }}</h2>
+          {{~#if settings.search_placeholder}}
+            {{#if settings.use_translations}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=true placeholder=(dc settings.search_placeholder)}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=true placeholder=settings.search_placeholder}}
+            {{/if}}
+          {{else}}
+            {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=true}}
+          {{/if~}}
+          <svg class="search-icon transition" aria-hidden="true">
+            <use xlink:href="#icon-search" />
+          </svg>
+        </div>
+      {{/is~}} {{! / .element-search }}
+
+    </div> {{! / .element-container }}
+
+  </div> {{! / .element-group }}
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Breadcrumbs }}
+    <div class="element-breadcrumbs breadcrumbs my-6 js-breadcrumbs" id="breadcrumbs">
+      {{breadcrumbs}}
+    </div> {{! / .element-breadrcumbs }}
+
+    {{! Group }}
+    <div class="element-group max-w-md" data-editable>
+
+      {{! Heading }}
+      <h1 class="element-heading mt-6" data-editable>
+        {{t 'what_is_your_post_about'}}
+      </h1> {{! / .element-page-header }}
+
+      {{! New post form }}
+      <div class="element-form form mb-7" id="new-post">
+        {{#form 'post' class='new_community_post'}}
+
+          <div class="form-field">
+            {{#required 'title'}}
+              {{label 'title'}}
+            {{else}}
+              {{#label 'title'}}
+                {{t 'title_label'}}<span class="optional">({{t 'optional'}})</span>
+              {{/label}}
+            {{/required}}
+            {{input 'title' autofocus=true}}
+            {{#validate 'title'}}
+              <div class="notification notification-error notification-inline">
+                {{error 'title'}}
+              </div>
+            {{/validate}}
+          </div>
+
+          {{! Post suggestion list }}
+          {{suggestion_list class='suggestion-list'}}
+
+          <div class="form-field">
+            {{#required 'details'}}
+              {{label 'details'}}
+            {{else}}
+              {{#label 'details'}}
+                {{t 'details_label'}}<span class="optional">({{t 'optional'}})</span>
+              {{/label}}
+            {{/required}}
+            {{wysiwyg 'details'}}
+            {{#validate 'details'}}
+              <div class="notification notification-error notification-inline">
+                {{error 'details'}}
+              </div>
+            {{/validate}}
+          </div>
+
+          <div class="form-field">
+            {{#required 'topic'}}
+              {{label 'topic'}}
+            {{else}}
+              {{#label 'topic'}}
+                {{t 'topic_label'}}<span class="optional">({{t 'optional'}})</span>
+              {{/label}}
+            {{/required}}
+            {{select 'topic'}}
+            {{#validate 'topic'}}
+              <div class="notification notification-error notification-inline">
+                {{error 'topic'}}
+              </div>
+            {{/validate}}
+          </div>
+
+          <div class="form-field">
+            {{#required 'content_tags'}}
+              {{label 'content_tags'}}
+            {{else}}
+              {{#label 'content_tags'}}
+                {{t 'content_tags_label'}}<span class="optional">({{t 'optional'}})</span>
+              {{/label}}
+            {{/required}}
+            {{multiselect 'content_tags' aria-describedby='content-tags-error-notification'}}
+            {{#validate 'content_tags'}}
+              <div class="notification notification-error notification-inline" id="content-tags-error-notification">
+                {{error 'content_tags'}}
+              </div>
+            {{/validate}}
+            <p>
+              {{t 'content_tags_description'}}
+            </p>
+          </div>
+
+          <footer class="mt-6">
+            {{input class='button button-brand' type='submit'}}
+          </footer>
+
+        {{/form}}
+      </div> {{! / .element-new-post-form }}
+
+    </div> {{! / .element-group }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('new-community-post-page');</script>

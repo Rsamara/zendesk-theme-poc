@@ -1,0 +1,154 @@
+{{! Page container }}
+<div class="page-container flex" id="page-container">
+
+  {{! Group }}
+  <div class="element-group relative flex flex-column color-scheme-secondary bg-subtle" data-editable>
+
+    {{! Container }}
+    <div class="element-container container" data-editable>
+
+      {{! Search }}
+      {{~#is settings.header_search_style 'none'}}
+        <div class="element-search search search-left search-lg my-5" data-editable>
+          <h2 class="sr-only">{{t 'search' }}</h2>
+          {{~#if settings.search_placeholder}}
+            {{#if settings.use_translations}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=(dc settings.search_placeholder)}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=settings.search_placeholder}}
+            {{/if}}
+          {{else}}
+            {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false}}
+          {{/if~}}
+          <svg class="search-icon transition" aria-hidden="true">
+            <use xlink:href="#icon-search" />
+          </svg>
+        </div>
+      {{/is~}} {{! / .element-search }}
+
+    </div> {{! / .element-container }}
+
+  </div> {{! / .element-group }}
+
+  {{! Container }}
+  <div class="element-container container flex-1" data-editable>
+
+    {{! Row }}
+    <div class="element-row row col-gap-x-lg h-full" data-editable>
+
+      {{! Column (content) }}
+      <div class="element-column page-content lg:col" data-editable>
+
+        {{! Group }}
+        <div class="element-group mt-6 mb-5" data-editable>
+
+          {{! Heading }}
+          <h1 class="element-heading my-0" data-editable>
+            {{category.name}}
+          </h1> {{! /.element-heading }}
+
+          {{! Paragraph }}
+          {{#if category.description}}
+            <p class="element-paragraph mb-0 mt-3 font-size-lg text-subtle" data-editable>
+              {{category.description}}
+            </p>
+          {{/if}} {{! /.element-paragraph }}
+
+        </div> {{! /.element-group }}
+
+        {{! Section list }}
+        <div class="element-section-list py-5 my-7 border-top border-bottom empty:hidden" x-data id="section-list">
+          {{#if sections}}
+            <div class="element-row row col-gap-x-lg col-gap-y-sm">
+              {{#each sections}}
+                <div class="element-column col-12
+                  {{~#if (compare ../settings.number_section_columns ">=" "2")}} md:col-6{{/if~}}
+                  {{~#if (compare ../settings.number_section_columns ">=" "3")}} lg:col-4{{/if~}}
+                  {{~#if (compare ../settings.number_section_columns "==" "4")}} xl:col-3{{/if~}}">
+
+                  <div class="flex align-items-baseline">
+                    <template x-if="$theme.hasSymbol('icon-section')">
+                      <svg class="svg-icon align-self-baseline bottom-0 mr-2">
+                        <use :href="$theme.symbol('icon-section')" />
+                      </svg>
+                    </template>
+                    <a class="element-link block py-2 font-size-lg" href="{{url}}">
+                      {{name}}
+                    </a>
+                  </div>
+
+                  {{#if description}}
+                    <p class="element-paragraph font-size-md">
+                      {{description}}
+                    </p>
+                  {{/if}}
+
+                </div>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="element-paragraph">
+              <a href="{{category.url}}">
+                {{t 'empty'}}
+              </a>
+            </p>
+          {{/if}}
+        </div> {{! / .element-section-list }}
+
+      </div> {{! / .element-column }}
+
+      {{! Sidebar left }}
+      <aside class="element-sidebar sidebar flex-first color-scheme-primary lg:sidebar-left lg:sidebar-sticky empty:hidden" x-data="sidebar" id="sidebar-left">
+
+        {{! Navigation }}
+        {{#isnt settings.category_sidebar 'none'}}
+          <div
+            class="element-navigation"
+            id="navigation-category-sidebar"
+            data-element="template"
+            data-template="sidebar-{{settings.category_sidebar}}"
+            data-template-data='{ "breakpoint": "lg" }'>
+          </div>
+        {{/isnt}} {{! / .element-navigation }}
+
+      </aside> {{! / .element-sidebar }}
+
+      {{! Sidebar right }}
+      <aside class="element-sidebar sidebar lg:sidebar-right lg:sidebar-sticky empty:hidden" x-data="sidebar" id="sidebar-right">
+
+        {{! Call-to-action element }}
+        {{#is settings.cta_style 'sidebar'}}
+          {{#isnt settings.cta_location 'home'}}
+            <div class="element-call-to-action color-scheme-{{settings.color_scheme_cta}} is-loading js-call-to-action" id="call-to-action-sidebar"></div>
+          {{/isnt}}
+        {{/is}} {{! / .element-call-to-action }}
+
+      </aside> {{! / .element-sidebar }}
+
+    </div> {{! /.element-row }}
+
+  </div> {{! /.element-container }}
+
+  {{! Call to action }}
+  {{~#isnt settings.cta_style 'none'}}
+    {{~#isnt settings.cta_style 'sidebar'}}
+      {{~#isnt settings.cta_location 'home'}}
+        <div class="element-call-to-action color-scheme-{{settings.color_scheme_cta}} is-loading js-call-to-action" id="call-to-action"></div>
+      {{/isnt~}}
+    {{/isnt~}}
+  {{/isnt~}} {{! / .element-call-to-action }}
+
+</div> {{! / #page-container }}
+
+<script type="text/javascript">
+  {{! Section images }}
+  {{~#each sections}}
+    {{~#if (asset id prefix='section-' suffix='.svg')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.svg'}}";{{~/if~}}
+    {{~#if (asset id prefix='section-' suffix='.png')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.png'}}";{{~/if~}}
+    {{~#if (asset id prefix='section-' suffix='.jpg')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.jpg'}}";{{~/if~}}
+    {{~#if (asset id prefix='section-' suffix='.jpeg')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.jpeg'}}";{{~/if~}}
+  {{~/each~}}
+
+  {{! Add a class name to the document element }}
+  document.documentElement.classList.add('category-page', 'category-{{category.id}}');
+</script>

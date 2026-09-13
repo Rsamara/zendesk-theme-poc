@@ -1,0 +1,243 @@
+{{! page.container}}
+<div class="page-container" id="page-container">
+  
+   {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Row }}
+    <div class="element-row row align-items-center my-6" data-editable>
+
+      {{! Column }}
+      <div class="element-column col-12{{#is settings.header_search_style 'none'}} md:col-8{{/is}}" data-editable>
+
+        {{! Breadcrumbs }}
+        <div class="element-breadcrumbs breadcrumbs mb-3 md:m-0 js-breadcrumbs" id="breadcrumbs">
+          <p>Brite Pay Help</p>
+        </div> {{! / .element-breadrcumbs }}
+
+      </div> {{! / .element-column }}
+
+      {{! Column }}
+      <div class="element-column col-12 md:col-4 empty:hidden" data-editable>
+
+        {{! Search }}
+        {{~#is settings.header_search_style 'none'}}
+          <div class="element-search search search-left" data-editable>
+            <h2 class="sr-only">{{t 'search' }}</h2>
+            {{~#if settings.search_placeholder}}
+              {{#if settings.use_translations}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=(dc settings.search_placeholder)}}
+              {{else}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=settings.search_placeholder}}
+              {{/if}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false}}
+            {{/if~}}
+            <svg class="search-icon transition" aria-hidden="true">
+              <use xlink:href="#icon-search" />
+            </svg>
+          </div>
+        {{/is~}} {{! / .element-search }}
+
+      </div> {{! / .element-column }}
+
+    </div> {{! / .element-row }}
+    
+    {{! ============================================================
+    Custom Help Center Page
+    Sections: Content | Video Library | FAQs
+    ============================================================ }}
+    
+<main class="hc-page" id="main-content">
+
+  {{! ── 1. CONTENT SECTION ─────────────────────────────────── }}
+  <section class="hc-section hc-content" aria-labelledby="content-heading">
+    <p class="hc-section__label">{{t 'overview'}}</p>
+    <h2 class="hc-section__title" id="content-heading">Getting started</h2>
+    <p class="hc-section__desc">
+      Everything you need to get up and running quickly. Browse articles,
+      watch videos, and find answers to common questions below.
+    </p>
+
+    <div class="hc-card-grid">
+
+      <article class="hc-card">
+        <div class="hc-card__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3 class="hc-card__title">Quick start guide</h3>
+        <p class="hc-card__body">Set up your account and configure your first project in minutes.</p>
+        <a href="/hc/en-us/articles/YOUR_ARTICLE_ID" class="hc-card__link">Read article →</a>
+      </article>
+
+      <article class="hc-card">
+        <div class="hc-card__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        </div>
+        <h3 class="hc-card__title">Account settings</h3>
+        <p class="hc-card__body">Manage preferences, notifications, and security options.</p>
+        <a href="/hc/en-us/articles/YOUR_ARTICLE_ID" class="hc-card__link">Read article →</a>
+      </article>
+
+      <article class="hc-card">
+        <div class="hc-card__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="hc-card__title">Team management</h3>
+        <p class="hc-card__body">Invite members, assign roles, and control permissions.</p>
+        <a href="/hc/en-us/articles/YOUR_ARTICLE_ID" class="hc-card__link">Read article →</a>
+      </article>
+
+    </div>
+  </section>
+
+
+  {{! ── 2. VIDEO LIBRARY ───────────────────────────────────── }}
+  <section class="hc-section hc-videos" aria-labelledby="video-heading">
+    <p class="hc-section__label">{{t 'video_library'}}</p>
+    <h2 class="hc-section__title" id="video-heading">Learn by watching</h2>
+    <p class="hc-section__desc">
+      Step-by-step tutorials to help you get the most out of every feature.
+    </p>
+
+    <div class="hc-video-grid">
+
+      <div class="hc-video-card">
+        <a href="YOUR_VIDEO_URL" class="hc-video-card__thumb" aria-label="Play: Introduction overview (3:42)">
+          {{! Replace src with your thumbnail image URL }}
+          <img src="YOUR_THUMBNAIL_URL" alt="" loading="lazy" />
+          <span class="hc-video-card__play" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </span>
+          <span class="hc-video-card__duration">3:42</span>
+        </a>
+        <div class="hc-video-card__info">
+          <h3 class="hc-video-card__title">Introduction overview</h3>
+          <p class="hc-video-card__desc">A complete walkthrough of the main dashboard</p>
+        </div>
+      </div>
+
+      <div class="hc-video-card">
+        <a href="YOUR_VIDEO_URL" class="hc-video-card__thumb" aria-label="Play: Setting up integrations (5:17)">
+          <img src="YOUR_THUMBNAIL_URL" alt="" loading="lazy" />
+          <span class="hc-video-card__play" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </span>
+          <span class="hc-video-card__duration">5:17</span>
+        </a>
+        <div class="hc-video-card__info">
+          <h3 class="hc-video-card__title">Setting up integrations</h3>
+          <p class="hc-video-card__desc">Connect your favorite tools in a few steps</p>
+        </div>
+      </div>
+
+      <div class="hc-video-card">
+        <a href="YOUR_VIDEO_URL" class="hc-video-card__thumb" aria-label="Play: Managing notifications (2:55)">
+          <img src="YOUR_THUMBNAIL_URL" alt="" loading="lazy" />
+          <span class="hc-video-card__play" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </span>
+          <span class="hc-video-card__duration">2:55</span>
+        </a>
+        <div class="hc-video-card__info">
+          <h3 class="hc-video-card__title">Managing notifications</h3>
+          <p class="hc-video-card__desc">Customize alerts so you only see what matters</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  {{! ── 3. FAQs ────────────────────────────────────────────── }}
+  <section class="hc-section hc-faqs" aria-labelledby="faq-heading">
+    <p class="hc-section__label">{{t 'faqs'}}</p>
+    <h2 class="hc-section__title" id="faq-heading">Frequently asked questions</h2>
+    <p class="hc-section__desc">
+      Can't find what you're looking for? Browse the most common questions below.
+    </p>
+
+    <dl class="hc-faq-list">
+
+      <div class="hc-faq-item">
+        <dt>
+          <button class="hc-faq-q" aria-expanded="false" aria-controls="faq-1">
+            How do I reset my password?
+            <svg class="hc-faq-q__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </dt>
+        <dd class="hc-faq-a" id="faq-1" hidden>
+          Go to the login page and click "Forgot password." Enter your email address
+          and we'll send you a reset link within a few minutes. Check your spam folder
+          if it doesn't arrive.
+        </dd>
+      </div>
+
+      <div class="hc-faq-item">
+        <dt>
+          <button class="hc-faq-q" aria-expanded="false" aria-controls="faq-2">
+            Can I change my plan at any time?
+            <svg class="hc-faq-q__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </dt>
+        <dd class="hc-faq-a" id="faq-2" hidden>
+          Yes — you can upgrade or downgrade your plan from the Billing section of
+          your account settings at any time. Changes take effect immediately.
+        </dd>
+      </div>
+
+      <div class="hc-faq-item">
+        <dt>
+          <button class="hc-faq-q" aria-expanded="false" aria-controls="faq-3">
+            How do I invite team members?
+            <svg class="hc-faq-q__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </dt>
+        <dd class="hc-faq-a" id="faq-3" hidden>
+          Navigate to Settings → Team, click "Invite member," and enter their email
+          address. They'll receive an invitation and can join once they confirm.
+        </dd>
+      </div>
+
+      <div class="hc-faq-item">
+        <dt>
+          <button class="hc-faq-q" aria-expanded="false" aria-controls="faq-4">
+            Is my data backed up automatically?
+            <svg class="hc-faq-q__chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </dt>
+        <dd class="hc-faq-a" id="faq-4" hidden>
+          Yes, all data is backed up daily to geographically distributed servers.
+          You can also export your data manually at any time from Account settings.
+        </dd>
+      </div>
+
+    </dl>
+  </section>
+
+</main>
+    
+<script>
+  (function () {
+  document.querySelectorAll('.hc-faq-q').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      var answerId = this.getAttribute('aria-controls');
+      var answer = document.getElementById(answerId);
+
+      // Collapse all others
+      document.querySelectorAll('.hc-faq-q').forEach(function (b) {
+        b.setAttribute('aria-expanded', 'false');
+        var a = document.getElementById(b.getAttribute('aria-controls'));
+        if (a) a.hidden = true;
+      });
+
+      // Toggle this one
+      if (!expanded) {
+        this.setAttribute('aria-expanded', 'true');
+        answer.hidden = false;
+      }
+    });
+  });
+}());
+    </script>

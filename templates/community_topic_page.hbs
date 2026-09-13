@@ -1,0 +1,190 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Row }}
+    <div class="element-row row align-items-center my-6" data-editable>
+
+      {{! Column }}
+      <div class="element-column col-12{{#is settings.header_search_style 'none'}} md:col-8{{/is}}" data-editable>
+
+        {{! Breadcrumbs }}
+        <div class="element-breadcrumbs breadcrumbs mb-3 md:m-0 js-breadcrumbs" id="breadcrumbs">
+          {{breadcrumbs}}
+        </div> {{! / .element-breadrcumbs }}
+
+      </div> {{! / .element-column }}
+
+      {{! Column }}
+      <div class="element-column col-12 md:col-4 empty:hidden" data-editable>
+
+        {{! Search }}
+        {{~#is settings.header_search_style 'none'}}
+          <div class="element-search search search-left" data-editable>
+            <h2 class="sr-only">{{t 'search' }}</h2>
+            {{~#if settings.search_placeholder}}
+              {{#if settings.use_translations}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=(dc settings.search_placeholder)}}
+              {{else}}
+                {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=settings.search_placeholder}}
+              {{/if}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false}}
+            {{/if~}}
+            <svg class="search-icon transition" aria-hidden="true">
+              <use xlink:href="#icon-search" />
+            </svg>
+          </div>
+        {{/is~}} {{! / .element-search }}
+
+      </div> {{! / .element-column }}
+
+    </div> {{! / .element-row }}
+
+    {{! Heading }}
+    <h1 class="element-heading mt-6 mb-2" data-editable>
+      {{topic.name}}
+      {{#if topic.internal}}
+        <svg class="svg-icon text-base font-size-xl ml-1 mb-1" aria-hidden="true">
+          <title>{{t 'internal'}}</title>
+          <use xlink:href="#icon-internal" />
+        </svg>
+      {{/if}}
+    </h1> {{! / .element-heading }}
+
+    {{! Paragraph }}
+    {{#if topic.description}}
+      <p class="element-paragraph font-size-lg" data-editable>
+        {{topic.description}}
+      </p>
+    {{/if}} {{! / .element-paragraph }}
+
+    {{! Subscribe }}
+    {{#if settings.show_subscribe}}
+      <div class="element-subscribe subscribe-topic my-5 js-subscribe" data-class="button button-sm button-outline-brand" data-editable>
+        {{subscribe}}
+      </div>
+    {{/if}} {{! / .element-subscribe }}
+
+    {{! Filters }}
+    <div class="element-filters flex align-items-center font-size-md border-bottom" data-editable>
+      <div class="dropdown mb-2" x-data="dropdown" x-bind="wrapper">
+        <button class="flex align-items-center not-a-button py-2 cursor-pointer" id="filter" aria-haspopup="true" x-bind="trigger">
+          {{current_filter.label}}
+          <svg class="svg-icon ml-1 bottom-0" aria-hidden="true" :class="{ 'rotate-180': isExpanded }">
+            <use xlink:href="#icon-chevron-down" />
+          </svg>
+        </button>
+        <div class="dropdown-menu" role="menu" aria-labelledby="filter" x-bind="menu">
+          {{#each filters}}
+            <a class="dropdown-item" href="{{url}}" aria-selected="{{selected}}" role="menuitem">
+              {{name}}
+            </a>
+          {{/each}}
+        </div>
+      </div>
+      <div class="dropdown mb-2 ml-4" x-data="dropdown" x-bind="wrapper">
+        <button class="flex align-items-center not-a-button py-2 cursor-pointer" id="sort" aria-haspopup="true" x-bind="trigger">
+          {{current_sorter.label}}
+          <svg class="svg-icon ml-1 bottom-0" aria-hidden="true" :class="{ 'rotate-180': isExpanded }">
+            <use xlink:href="#icon-chevron-down" />
+          </svg>
+        </button>
+        <div class="dropdown-menu" role="menu" aria-labelledby="sort" x-bind="menu">
+          {{#each sorters}}
+            <a class="dropdown-item" href="{{url}}" aria-selected="{{selected}}" role="menuitem">
+              {{name}}
+            </a>
+          {{/each}}
+        </div>
+      </div>
+    </div> {{! / .element-filters }}
+
+    {{! Post list }}
+    <div class="element-post-list mb-7" data-editable>
+
+      {{#if posts}}
+        <div class="element-container container">
+          <div class="list-bordered">
+            {{#each posts}}
+              <div class="element-group flex align-items-center justify-content-between py-4">
+                <div class="flex-1">
+                  <a class="element-link" href="{{url}}" title="{{title}}">
+                    {{title}}
+                  </a>
+                  {{#if pinned}}<span class="element-badge badge ml-2">{{t 'pinned'}}</span>{{/if}}
+                  {{#if featured}}<span class="element-badge badge ml-2">{{t 'featured'}}</span>{{/if}}
+                  {{#isnt status 'none'}}<span class="element-badge badge badge-{{status_dasherized}} ml-2">{{status_name}}</span>{{/isnt}}
+                  <ul class="element-list list-divider mb-0 font-size-sm text-subtle">
+                    <li>
+                      <p class="element-paragraph inline my-0">
+                        {{author.name}}
+                      </p>
+                    </li>
+                    <li>
+                      <p class="element-paragraph inline my-0">
+                        {{#if editor}}
+                          {{t 'edited'}} {{date edited_at timeago=true}}
+                        {{else}}
+                          {{date created_at timeago=true}}
+                        {{/if}}
+                      </p>
+                    </li>
+                    <li class="md:hidden">
+                      <p class="element-paragraph inline my-0">
+                        {{vote_count}} {{t 'vote' count=vote_count}}
+                      </p>
+                    </li>
+                    <li class="md:hidden">
+                      <p class="element-paragraph inline my-0">
+                        {{comment_count}} {{t 'comment' count=comment_count}}
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="hidden md:flex">
+                  <p class="element-paragraph py-2 px-4 my-0 text-center capitalize font-size-sm text-subtle">
+                    {{vote_sum}}<br>{{t 'vote' count=vote_sum}}
+                  </p>
+                  <p class="element-paragraph py-2 px-4 my-0 text-center capitalize font-size-sm text-subtle">
+                    {{comment_count}}<br>{{t 'comment' count=comment_count}}
+                  </p>
+                </div>
+
+              </div>
+            {{/each}}
+          </div>
+        </div>
+        {{else}}
+        <p class="element-paragraph mt-4 text-subtle font-size-md">
+          {{t 'no_posts_with_filter'}}
+        </p>
+      {{/if}}
+
+      {{! Pagination }}
+      {{#if pagination}}
+        <div class="element-pagination pagination my-6 js-pagination">
+          {{pagination}}
+        </div>
+      {{/if}}
+
+    </div> {{! / .element-post-list }}
+
+  </div> {{! / .element-container }}
+
+  {{! Call to action }}
+  <div class="element-call-to-action py-8 bg-base" data-editable>
+    <div class="element-container container text-center">
+      <h2 class="element-heading my-0">
+        {{t 'suggest_new_post'}}
+      </h2>
+      {{link 'new_post' class='element-button button button-brand mt-5' role='button'}}
+    </div>
+  </div> {{! /.element-call-to-action }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('topic-page', 'topic-{{topic.id}}');</script>

@@ -1,0 +1,735 @@
+{{! Page container }}
+<div class="page-container flex" id="page-container">
+
+  {{! Group }}
+  <div class="element-group relative flex flex-column color-scheme-secondary bg-subtle" data-editable>
+
+    {{! Container }}
+    <div class="element-container container" data-editable>
+
+      {{! Search }}
+      <script type="text/javascript"
+        src="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/an.js"></script>
+      <script type="text/javascript"
+        src="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/searchbox.js"></script>
+      <link rel="stylesheet"
+        href="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/searchbox.css">
+      <div class="su__custom_page">
+        <div id="auto">
+          <div ng-controller="SearchautoController">
+            <div bind-html-compile="autocompleteHtml"></div>
+          </div>
+        </div>
+      </div>
+
+      <!--{{~#is settings.header_search_style 'none'}}
+        <div class="element-search search search-left search-lg my-5" data-editable>
+          <h2 class="sr-only">{{t 'search' }}</h2>
+          {{~#if settings.search_placeholder}}
+            {{#if settings.use_translations}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=(dc settings.search_placeholder)}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false placeholder=settings.search_placeholder}}
+            {{/if}}
+          {{else}}
+            {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=false}}
+          {{/if~}}
+          <svg class="search-icon transition" aria-hidden="true">
+            <use xlink:href="#icon-search" />
+          </svg>
+        </div>
+      {{/is~}} {{! / .element-search }}-->
+
+    </div> {{! / .element-container }}
+
+  </div> {{! / .element-group }}
+
+  {{! Container }}
+  <div class="element-container container flex-1" data-editable>
+
+    {{! Row }}
+    <div class="element-row row col-gap-x-lg h-full" data-editable>
+
+      {{! Column (content) }}
+      <article class="element-column page-content col-12 lg:col lg:mb-7 lg:max-w-md" itemscope itemtype="http://schema.org/Article" data-editable>
+
+        {{! Heading }}
+        <h1 class="element-heading mt-6" title="{{article.title}}" itemprop="name" data-editable>
+          {{article.title}}
+          {{#if article.internal}}
+            <svg class="svg-icon text-base font-size-xl ml-1 mb-1" aria-hidden="true">
+              <title>{{t 'internal'}}</title>
+              <use xlink:href="#icon-internal" />
+            </svg>
+          {{/if}}
+        </h1> {{! / .element-heading }}
+
+        {{! Group }}
+        <div class="element-group flex flex-column justify-content-between mb-6 sm:flex-row" data-editable>
+
+          {{! Author }}
+          {{#isnt settings.article_metadata 'none'}}
+            <div class="element-author article-author media mb-4 sm:mb-0" id="article-author">
+
+              {{#contains settings.article_metadata 'author'}}
+                <div class="element-avatar avatar{{#is settings.article_metadata 'author'}} avatar-sm font-size-xs{{/is}} mr-2">
+                  {{#if article.author.agent}}
+                    <svg class="svg-icon absolute bottom-0 right-0 text-brand bg-white border border-white circle" aria-hidden="true">
+                      <use xlink:href="#icon-agent" />
+                    </svg>
+                  {{/if}}
+                  <img class="avatar-img" alt="{{article.author.name}}" src="{{article.author.avatar_url}}">
+                </div>
+              {{/contains}}
+
+              <div class="media-body align-self-center mr-2">
+
+                {{#contains settings.article_metadata 'author'}}
+                  {{#link 'user_profile' class="element-link font-size-md font-medium" id=article.author.id}}
+                    {{article.author.name}}
+                  {{/link}}
+                {{/contains}}
+
+                <ul class="list-divider mb-0 empty:hidden">
+                  {{~#contains settings.article_metadata 'date'}}
+                    <li>
+                      <p class="element-paragraph inline my-0 font-size-sm text-subtle">
+                        {{#is article.created_at article.edited_at}}
+                          {{date article.created_at timeago=true}}
+                        {{else}}
+                          {{t 'updated'}}
+                          {{date article.edited_at timeago=true}}
+                        {{/is}}
+                      </p>
+                    </li>
+                  {{/contains~}}
+                  {{~#if settings.show_article_comments}}
+                    {{~#if comments}}
+                      <li>
+                        <a class="element-link font-size-sm" href="#article-comment-list" title="{{t 'go_to_comments'}}">
+                          {{t 'comments_count' count=article.comment_count}}
+                        </a>
+                      </li>
+                    {{/if~}}
+                  {{/if~}}
+                </ul>
+
+              </div>
+            </div>
+          {{/isnt}} {{! / .element-author }}
+
+          {{! Subscribe }}
+          {{#if settings.show_subscribe}}
+            <div class="element-subscribe subscribe-article js-subscribe" data-class="button button-outline-brand button-sm" data-editable>
+              {{subscribe}}
+            </div>
+          {{/if}} {{! / .element-subscribe }}
+
+        </div> {{! / .element-group }}
+
+        <!--{{! Table of Contents }}
+        {{~#isnt settings.table_of_contents_style 'none'}}
+          {{~#isnt settings.table_of_contents_style 'sidebar-left'}}
+            {{~#isnt settings.table_of_contents_style 'sidebar-right'}}
+              <div
+                class="element-table-of-contents table-of-contents"
+                id="table-of-contents"
+                data-element="table-of-contents"
+                data-selector=".content h2">
+              </div>
+            {{/isnt~}}
+          {{/isnt~}}
+        {{/isnt~}} {{! / .element-table-of-contents }}-->
+
+        {{! Article content }}
+        <div class="element-content article-content content" itemprop="articleBody" data-editable>
+          {{article.body}}
+        </div> {{! / .element-content }}
+
+        {{! Content tags }}
+        <div class="element-content-tags p-4 my-6 border border-radius empty:hidden" data-editable>
+          {{#if (compare article.content_tags.length ">" 0)}}
+            <p class="element-paragraph mb-3 text-subtle">
+              {{t 'content_tags_label'}}
+            </p>
+            <ul class="element-list list-unstyled flex flex-wrap mb-0">
+              {{#each article.content_tags}}
+                <li class="mr-2">
+                  {{#link "search_result" class="element-badge badge" content_tag_id=id}}
+                    {{name}}
+                  {{/link}}
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div> {{! / .element-content-tags }}
+
+        {{! Attachment list }}
+        <div class="element-attachment-list my-6 empty:hidden" data-editable>
+          {{#if attachments}}
+            <ul class="element-list attachments list-unstyled mb-0">
+              {{#each attachments}}
+                <li>
+                  <svg class="svg-icon mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" d="M9.5 4v7.7c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5V3C6.5 1.6 7.6.5 9 .5s2.5 1.1 2.5 2.5v9c0 1.9-1.6 3.5-3.5 3.5S4.5 13.9 4.5 12V4"/>
+                  </svg>
+                  <a class="element-link mr-2" href="{{url}}" target="_blank">{{name}}</a>
+                  <span class="element-paragraph font-size-md text-subtle">{{size}}</span>
+                </li>
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div> {{! / .element-attachment-list }}
+
+        {{! Sharing }}
+        {{#if settings.show_sharing}}
+          <div class="element-sharing article-sharing my-6" id="article-sharing">
+            {{#if settings.share_title}}
+              <h4 class="element-heading">
+                {{#if settings.use_translations}}
+                  {{dc settings.share_title}}
+                {{else}}
+                  {{settings.share_title}}
+                {{/if}}
+              </h4>
+            {{/if}}
+            {{share}}
+          </div>
+        {{/if}} {{! / .element-sharing }}
+
+        {{! Voting }}
+        {{#if settings.show_article_voting}}
+          <div class="element-voting article-voting py-6 my-6 text-center border-top border-bottom" id="article-voting">
+            {{#with article}}
+              <h4 class="element-heading mt-0">
+                {{t 'was_this_article_helpful'}}
+              </h4>
+              <div class="button-group" role="group">
+                {{vote 'up' class='element-button button button-outline-brand mb-4' selected_class='is-active' role='radio'}}
+                {{vote 'down' class='element-button button button-outline-brand mb-4' selected_class='is-active' role='radio'}}
+              </div>
+              {{vote 'label' class='element-paragraph block text-subtle font-size-sm mb-0'}}
+              {{#if ../request_callout}}
+                <p class="element-paragraph mt-5 mb-0">
+                  {{../request_callout}}
+                </p>
+              {{/if}}
+            {{/with}}
+            <div id="sq-article-feedback-form" style="padding-top: 12px; display: none;">
+         <div id="sq-article-feedback-prompt" style="text-align: center; margin-top: 12px; margin-bottom: 24px; font-weight: 600">
+            <div id="sq-article-feedback-prompt-down" style="display: none">
+               We're sorry to hear that. Can you tell us what went wrong?
+            </div> 
+            <div id="sq-article-feedback-prompt-up" style="display: none">
+               We’re glad we could help! Is there anything you'd like to share with us?
+            </div>
+         </div>
+         <div id="sq-article-feedback-options" style="text-align: left; margin-bottom: 18px"> 
+            <div id="sq-article-feedback-options-down" style="text-align: left; margin-bottom: 18px; display: none"> 
+               <div style="margin-bottom: 6px">
+                  <input type="radio" id="sq-article-feedback-options-down-1" name="sq-article-feedback-options-down" value="1"/>
+                  <label for="sq-article-feedback-options-down-1" style="margin-left: 5px">This article didn't answer my question or solve my problem</label>
+               </div> 
+               <div style="margin-bottom: 6px">
+                  <input type="radio" id="sq-article-feedback-options-down-2" name="sq-article-feedback-options-down" value="2"/>
+                  <label for="sq-article-feedback-options-down-2" style="margin-left: 5px">I found this article confusing or difficult to read</label>
+               </div> 
+               <div style="margin-bottom: 6px">
+                  <input type="radio" id="sq-article-feedback-options-down-3" name="sq-article-feedback-options-down" value="3"/>
+                  <label for="sq-article-feedback-options-down-3" style="margin-left: 5px">I don't like the answer I found or how the feature works</label>
+               </div> 
+               <div style="margin-bottom: 6px">
+                  <input type="radio" id="sq-article-feedback-options-down-4" name="sq-article-feedback-options-down" value="4"/>
+                  <label for="sq-article-feedback-options-down-4" style="margin-left: 5px">Something else</label>
+               </div> 
+            </div>
+            
+            <div id="sq-article-feedback-options-up" style="text-align: left; margin-bottom: 18px; display: none"> 
+            </div>
+         </div>
+         <div id="sq-article-feedback-text" style="text-align: left">
+            <textarea id="sq-article-feedback-text-up" placeholder="Please provide any feedback you'd like to share" name="article-down-vote-reason" rows="4" cols="50" style="display: none" ></textarea>
+            <textarea id="sq-article-feedback-text-down" placeholder="Please provide any feedback you'd like to share" name="article-down-vote-reason" rows="4" cols="50" style="display: none"></textarea>
+            <div id="sq-article-feedback-note-up" style="font-size: small; color: grey">This form is for feedback only and you won't receive a reply. Please don't include any personal information about yourself or someone else.</div> 
+            <div id="sq-article-feedback-note-down" style="font-size: small; color: grey">This form is for feedback only and you won't receive a reply. Please don't include any personal information about yourself or someone else.</div>
+          <button id="sq-article-submit-feedback" class="button button-primary" style="margin-top: 12px;">Submit Feedback</button>
+         </div>
+         <div id="sq-article-feedback-confirm-up" style="display: none; color: green; margin-top: 10px">Thank you! Your feedback helps us improve this article for everyone.</div>
+         <div id="sq-article-feedback-confirm-down" style="display: none; color: green; margin-top: 10px">Thank you! Your feedback helps us improve this article for everyone.</div>
+      </div> 
+          </div>
+        {{/if}} {{! / .element-voting }}
+
+        {{! Article navigation }}
+        {{#isnt settings.article_navigation_style 'none'}}
+          <div class="element-article-navigation article-navigation" x-data="articleNavigation({ articleId: {{article.id}}, sectionId: {{section.id}} })" id="article-navigation">
+            <div class="element-row row my-7" x-show="!loading && (!!previousArticle || !!nextArticle)">
+
+              {{! Previous article }}
+              <div class="element-column col" x-show="previousArticle">
+                <h4 class="element-heading mt-0 mb-1" x-show="previousTitle" x-text="previousTitle"></h4>
+                <a class="element-link font-size-md" :href="previousArticle?.html_url" x-text="previousArticle?.title"></a>
+              </div>
+
+              {{! Next article }}
+              <div class="element-column col text-right" x-show="nextArticle">
+                <h4 class="element-heading mt-0 mb-1" x-show="nextTitle" x-text="nextTitle"></h4>
+                <a class="element-link font-size-md" :href="nextArticle?.html_url" x-text="nextArticle?.title"></a>
+              </div>
+
+            </div>
+          </div>
+        {{/isnt}} {{! / .element-article-navigation }}
+
+        {{! Related and recently viewed articles }}
+        <div class="element-row row" data-editable>
+
+          {{! Column }}
+          <div class="element-column col-12 empty:hidden{{#if settings.show_recently_viewed_articles}} md:col-6{{/if}}" data-editable>
+
+            {{! Related articles }}
+            {{#if settings.show_related_articles}}
+              <div class="element-related-articles related-articles mb-6 js-related-articles empty:hidden" id="related-articles">
+                {{related_articles}}
+                <script type="text/template" id="tmpl-related-articles">
+                  <% if (articles.length) { %>
+                    <% if (heading) { %>
+                      <h3 class="element-heading my-0 mb-3">
+                        <%= heading %>
+                      </h3>
+                    <% } %>
+                    <ul class="element-list list-unstyled mb-0 font-size-md">
+                      <% articles.forEach(article => { %>
+                        <li>
+                          <a class="element-link block mb-3" href="<%= article.html_url %>" rel="nofollow">
+                            <%= article.title %>
+                          </a>
+                        </li>
+                      <% }) %>
+                    </ul>
+                  <% } %>
+                </script>
+              </div>
+            {{/if}} {{! / .element-related-articles }}
+
+          </div> {{! / .element-column }}
+
+          {{! Column }}
+          <div class="element-column col-12 empty:hidden {{#if settings.show_related_articles}} md:col-6{{/if}}" data-editable>
+
+            {{! Recently viewed articles }}
+            {{#if settings.show_recently_viewed_articles}}
+              <div class="element-recently-viewed-articles recently-viewed-articles mb-6 js-recently-viewed-articles empty:hidden" id="recently-viewed-articles">
+                {{recent_articles}}
+                <script type="text/template" id="tmpl-recently-viewed-articles">
+                  <% if (articles.length) { %>
+                    <% if (heading) { %>
+                      <h3 class="element-heading my-0 mb-3">
+                        <%= heading %>
+                      </h3>
+                    <% } %>
+                    <ul class="element-list list-unstyled mb-0 font-size-md">
+                      <% articles.forEach(article => { %>
+                        <li>
+                          <a class="element-link block mb-3" href="<%= article.html_url %>" rel="nofollow">
+                            <%= article.title %>
+                          </a>
+                        </li>
+                      <% }) %>
+                    </ul>
+                  <% } %>
+                </script>
+              </div>
+            {{/if}} {{! / .element-recently-viewed-articles }}
+
+          </div> {{! / .element-column }}
+
+        </div> {{! / .element-row }}
+
+        {{! Comment list }}
+        {{#if settings.show_article_comments}}
+          <div class="element-comment-list comments" itemscope itemtype="http://schema.org/UserComments" id="article-comment-list">
+
+            {{! Comments header }}
+            <div class="element-group py-2 border-top border-bottom text-subtle font-size-md">
+              <h3 class="element-heading mt-4 mb-2">
+                {{t 'comments'}}
+              </h3>
+              <div class="flex justify-content-between align-items-baseline">
+                <p class="element-paragraph">
+                  {{t 'comments_count' count=article.comment_count}}
+                </p>
+                {{#if comments}}
+                  <div class="dropdown" x-data="dropdown" x-bind="wrapper">
+                    <button class="element-button not-a-button py-1 cursor-pointer" aria-haspopup="true" x-bind="trigger">
+                      {{t 'sort_by'}}
+                      <svg class="svg-icon" aria-hidden="true" :class="{ 'rotate-180': isExpanded }">
+                        <use xlink:href="#icon-chevron-down" />
+                      </svg>
+                    </button>
+                    <span class="dropdown-menu" role="menu" x-bind="menu">
+                      {{#each comment_sorters}}
+                        <a class="element-dropdown-item dropdown-item" aria-selected="{{selected}}" href="{{url}}" role="menuitem">
+                          {{name}}
+                        </a>
+                      {{/each}}
+                    </span>
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+
+            {{! Comments }}
+            {{#if comments}}
+              <ul class="comment-list list-unstyled">
+                {{#each comments}}
+                  <li class="comment py-5 border-bottom" id="{{anchor}}">
+
+                    {{! Comment author }}
+                    <div class="element-author comment-author media mb-3">
+
+                      <div class="element-avatar avatar mr-2">
+                        {{#if author.agent}}
+                          <svg class="svg-icon absolute bottom-0 right-0 text-brand bg-base border border-white circle" aria-hidden="true">
+                            <use xlink:href="#icon-agent" />
+                          </svg>
+                        {{/if}}
+                        <img class="avatar-img" src="{{author.avatar_url}}" alt="Comment author" />
+                      </div>
+
+                      <div class="media-body">
+
+                        {{#link 'user_profile' class="element-link font-size-md font-medium" id=author.id}}
+                          {{author.name}}
+                        {{/link}}
+
+                        <ul class="element-list list-divider mb-0">
+                          <li>
+                            <p class="element-paragraph inline my-0 font-size-sm text-subtle">
+                              {{#if editor}}
+                                {{t 'edited'}} {{date edited_at timeago=true}}
+                              {{else}}
+                                {{date created_at timeago=true}}
+                              {{/if}}
+                            </p>
+                          </li>
+                        </ul>
+                      </div>
+
+                      {{! Comment actions }}
+                      <div class="actions-comment js-actions" data-class="element-button not-a-button py-1 px-2 circle cursor-pointer transition hover:bg-subtle">
+                        {{#actions}}
+                          <svg class="svg-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 20C12.5523 20 13 19.5523 13 19C13 18.4477 12.5523 18 12 18C11.4477 18 11 18.4477 11 19C11 19.5523 11.4477 20 12 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        {{/actions}}
+                      </div>
+
+                    </div>
+
+                    {{#with ticket}}
+                      <a href="{{url}}" target="_zendesk_lotus" class="status-label escalation-badge">
+                        {{t 'request'}}{{id}}
+                      </a>
+                    {{/with}}
+
+                    {{#if pending}}
+                      <span class="element-badge badge badge-pending">
+                        {{t 'pending_approval'}}
+                      </span>
+                    {{/if}}
+
+                    {{! Comment content }}
+                    <section class="element-content comment-content content font-size-md" id="{{anchor}}-body">
+                      {{body}}
+                    </section>
+
+                    {{! Comment voting }}
+                    <div class="element-voting comment-voting">
+                      <div class="button-group" role="group">
+                        {{#vote 'up' class='button button-outline-brand button-sm px-2 py-1' selected_class='is-active' role='radio' aria-describedby=(concat anchor "-author " anchor "-body")}}
+                          <svg class="svg-icon rotate-180" aria-hidden="true">
+                            <use xlink:href="#icon-chevron-down" />
+                          </svg>
+                        {{/vote}}
+                        {{#vote 'down' class='button button-outline-brand button-sm px-2 py-1' selected_class='is-active' role='radio' aria-describedby=(concat anchor "-author " anchor "-body")}}
+                          <svg class="svg-icon" aria-hidden="true">
+                            <use xlink:href="#icon-chevron-down" />
+                          </svg>
+                        {{/vote}}
+                      </div>
+                      {{vote 'sum' class='element-paragraph font-size-sm text-subtle ml-2'}}
+                    </div>
+
+                  </li>
+                {{/each}}
+              </ul>
+            {{/if}}
+
+            {{! Pagination }}
+            {{#if pagination}}
+              <div class="element-pagination pagination my-6 js-pagination">
+                {{pagination}}
+              </div>
+            {{/if}}
+
+          </div>
+        {{/if}} {{! / .element-comment-list }}
+
+        {{! Comment form }}
+        {{#if settings.show_article_comments}}
+          <div class="element-form my-6" id="article-comment-form">
+            {{#form 'comment' class='comment-form form'}}
+              <div class="flex" x-data="commentField">
+                <div class="element-avatar avatar mr-3 hidden md:block">
+                  {{user_avatar class='avatar-img'}}
+                </div>
+                <div class="flex-1">
+                  <div class="element-group p-3 border border-radius font-size-md bg-base text-subtle cursor-pointer" :class="{ 'hidden': isVisible }" @click="show">
+                    {{t 'add_to_conversation'}}
+                  </div>
+                  <div :class="{ 'hidden': !isVisible }">
+                    <div class="form-field mb-3">
+                      {{wysiwyg 'body' rows='7'}}
+                    </div>
+                    <div class="flex align-items-center justify-content-end">
+                      {{input class='element-button button button-brand align-self-end' type='submit'}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/form}}
+
+            {{#if comment_callout}}
+              <p class="element-paragraph text-subtle mt-4 font-size-md">
+                {{comment_callout}}
+              </p>
+            {{/if}}
+
+          </div>
+        {{/if}} {{! / .element-form }}
+
+      </article> {{! / .element-column }}
+
+      <!--{{! Sidebar left }}
+      <aside class="element-sidebar sidebar flex-first color-scheme-secondary lg:sidebar-left lg:sidebar-sticky empty:hidden" x-data="sidebar" id="sidebar-left">
+
+        {{! Navigation element }}
+        {{#isnt settings.article_sidebar 'none'}}
+          <div
+            class="element-navigation"
+            id="navigation-article-sidebar"
+            {{#isnt settings.article_sidebar 'articles-in-section'}}
+            data-element="template"
+            data-template="sidebar-{{settings.article_sidebar}}"
+            data-template-data='{ "breakpoint": "lg", "activeSectionId": {{section.id}} }'
+            {{/isnt}}>-->
+
+            {{! Articles in this section }}
+            {{#is settings.article_sidebar 'articles-in-section'}}
+              <div class="element-group mt-5 border-top border-bottom lg:my-6 lg:mr-5 lg:border-0">
+                <div x-data="collapse({ breakpoint: 'lg' })">
+                  <h3 class="element-heading flex align-items-center justify-content-between my-3" x-bind="trigger">
+                    {{section.name}}
+                    <svg class="svg-icon bottom-0 ml-1 lg:hidden" :class="{ 'rotate-180': (isExpanding || isExpanded) }" aria-hidden="true">
+                      <use xlink:href="#icon-chevron-down" />
+                    </svg>
+                  </h3>
+                  <div class="collapse" x-bind="collapse">
+                    <ul class="element-list list-unstyled pb-3 mb-0 font-size-md">
+                      {{#each section.articles}}
+                        <li>
+                          <a class="element-link block py-1 text-inherit{{#is id ../article.id}} text-brand font-semibold{{/is}} hover:text-brand hover:no-underline" href="{{url}}">
+                            {{title}}
+                          </a>
+                        </li>
+                      {{/each}}
+                      {{#if section.more_articles}}
+                        <li>
+                          <a class="element-link block py-1 text-inherit hover:text-brand hover:no-underline" href="{{section.url}}">
+                            {{t 'show_all_articles' section.article_count}}<i class="element-icon fas fa-arrow-right ml-1"></i>
+                          </a>
+                        </li>
+                      {{/if}}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {{/is}}
+
+          </div>
+        {{/isnt}} {{! / .element-navigation }}
+
+      </aside> {{! / .element-sidebar }}
+
+      {{! Sidebar right }}
+      <aside class="element-sidebar sidebar xl:sidebar-right xl:sidebar-sticky empty:hidden" x-data="sidebar" id="sidebar-right">
+
+        {{! Table of Contents }}
+        {{#is settings.table_of_contents_style 'sidebar-right'}}
+          <div
+            class="element-table-of-contents table-of-contents"
+            id="table-of-contents-sidebar"
+            data-element="table-of-contents"
+            data-selector=".content h2">
+          </div>
+        {{/is}} {{! / .element-table-of-contents }}
+
+        {{! Call-to-action }}
+        {{#is settings.cta_style 'sidebar'}}
+          {{#isnt settings.cta_location 'home'}}
+            <div class="element-call-to-action color-scheme-{{settings.color_scheme_cta}} is-loading js-call-to-action" id="call-to-action-article-sidebar"></div>
+          {{/isnt}}
+        {{/is}} {{! / .element-call-to-action }}
+
+      </aside> {{! / .element-sidebar }}
+
+    </div> {{! / .element-row }}
+
+  </div> {{! / .element-container }}
+
+  {{! Call to action }}
+  {{~#isnt settings.cta_style 'none'}}
+    {{~#isnt settings.cta_style 'sidebar'}}
+      {{~#isnt settings.cta_location 'home'}}
+        <div class="element-call-to-action color-scheme-{{settings.color_scheme_cta}} is-loading js-call-to-action" id="call-to-action"></div>
+      {{/isnt~}}
+    {{/isnt~}}
+  {{/isnt~}} {{! / .element-call-to-action }}
+
+</div> {{! / #page-container }}
+
+{{! Table of Contents }}
+{{~#isnt settings.table_of_contents_style 'none'}}
+
+  {{! List styles (bullet, numbered, unstyled) }}
+  {{~#contains 'disc decimal unstyled' settings.table_of_contents_style}}
+    <script type="text/template" id="tmpl-table-of-contents">
+      <% if (items.length > 1) { %>
+        <div class="element-group py-5 my-5 w-full border-top border-bottom">
+          <% if (heading) { %>
+            <h3 class="element-heading mt-0 mb-3 font-size-lg">
+              <%= heading %>
+            </h3>
+          <% } %>
+          {{#is settings.table_of_contents_style 'unstyled'}}
+            <%= partial('table-of-contents-list', { items, className: 'list-unstyled mb-0 font-size-md' }) %>
+          {{else}}
+            <%= partial('table-of-contents-list', { items, className: 'list-{{settings.table_of_contents_style}} pl-4 mb-0 font-size-md' }) %>
+          {{/is}}
+        </div>
+      <% } %>
+    </script>
+    <script type="text/template" id="tmpl-table-of-contents-list">
+      <% if (items.length) { %>
+        <ol class="<%= className %>">
+          <% items.forEach(item => { %>
+            <li class="<% if (item.level > 2) { %> pl-3<% } %>">
+              <a class="element-link block mt-2" href="<%= item.html_url %>">
+                <%= item.name %>
+              </a>
+              <%= partial('table-of-contents-list', { items: item.children, className }) %>
+            </li>
+          <% }); %>
+        </ol>
+      <% } %>
+    </script>
+  {{/contains~}}
+
+  {{! Card styles }}
+  {{~#contains settings.table_of_contents_style 'card'}}
+    <script type="text/template" id="tmpl-table-of-contents">
+      <% if (items.length > 1) { %>
+      <div class="element-card card p-5 my-5 w-full
+        {{~#is settings.table_of_contents_style 'card-float-right'}} float-right lg:col-5 md:ml-5{{else}} border-left-3{{/is}}">
+          <% if (heading) { %>
+            <h3 class="element-heading mt-0 mb-3 font-size-lg">
+              <%= heading %>
+            </h3>
+          <% } %>
+          <%= partial('table-of-contents-list', { items, className: 'list-unstyled mb-0 font-size-md' }) %>
+        </div>
+      <% } %>
+    </script>
+    <script type="text/template" id="tmpl-table-of-contents-list">
+      <% if (items.length) { %>
+        <ol class="<%= className %>">
+          <% items.forEach(item => { %>
+            <li class="list-item<% if (item.level > 2) { %> pl-3<% } %>">
+              <a class="element-link block mt-2" href="<%= item.html_url %>">
+                <%= item.name %>
+              </a>
+              <%= partial('table-of-contents-list', { items: item.children, className }) %>
+            </li>
+          <% }); %>
+        </ol>
+      <% } %>
+    </script>
+  {{/contains~}}
+
+  {{! Sidebar }}
+  {{~#contains settings.table_of_contents_style 'sidebar'}}
+    <script type="text/template" id="tmpl-table-of-contents">
+      <% if (items.length > 1) { %>
+        <div class="element-group my-6 font-size-md hidden xl:block" x-data="scrollspy({ offset: '{{#isnt settings.sticky_header 'never'}}{{settings.header_height}}{{else}}20px{{/isnt}}' })">
+          <% if (heading) { %>
+            <h3 class="element-heading mt-0 mb-3">
+              <%= heading %>
+            </h3>
+          <% } %>
+          <%= partial('table-of-contents-list', { items, className: 'nav flex-column font-size-md flex-no-wrap' }) %>
+        </div>
+      <% } %>
+    </script>
+    <script type="text/template" id="tmpl-table-of-contents-list">
+      <% if (items.length) { %>
+        <ol class="element-list <%= className %>">
+          <% items.forEach(item => { %>
+            <li>
+              <a
+                class="element-nav-link nav-link border-radius hover:bg-subtle"
+                :class="{ 'text-brand-inverse bg-brand hover:text-brand-inverse hover:bg-brand is-selected': activeElement === $el }"
+                href="<%= item.html_url %>">
+                <%= item.name %>
+              </a>
+              <%= partial('table-of-contents-list', { items: item.children, className: 'list-none pl-2 mb-0' }) %>
+            </li>
+          <% }) %>
+        </ol>
+      <% } %>
+    </script>
+  {{/contains~}}
+
+  {{! Heading anchor link }}
+  <script type="text/template" id="tmpl-anchor-link">
+    <a class="link-anchor ml-1 hover:no-underline" href="#<%= heading.id %>">
+      <svg class="fill-current" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14.4833094,12.7886331 C14.0159137,12.3212374 13.2557698,12.3212374 12.7883741,12.7886331 C11.3861871,14.1908201 9.10109353,14.1908201 7.69873381,12.7886331 L3.45906475,8.54896403 C2.77920863,7.86910791 2.40621583,6.96733813 2.40621583,6.00423022 C2.40621583,5.0411223 2.77919137,4.13935252 3.45906475,3.4594964 C4.8612518,2.05730935 7.14159712,2.05730935 8.54870504,3.4594964 L11.1548201,6.06561151 C11.6222158,6.53300719 12.3823597,6.53300719 12.8497554,6.06561151 C13.3171511,5.59821583 13.3171511,4.83807194 12.8497554,4.37067626 L10.2436403,1.76456115 C7.90661871,-0.572460432 4.10119424,-0.572460432 1.76421583,1.76456115 C0.631122302,2.89765468 0.00789928058,4.39899281 0.00789928058,6.00423022 C0.00789928058,7.60471942 0.631122302,9.11080576 1.76421583,10.2438993 L6.00388489,14.4835683 C7.1747482,15.6497266 8.70915108,16.2351367 10.243554,16.2351367 C11.7779568,16.2351367 13.3123597,15.6497266 14.483223,14.4835683 C14.9506187,14.0161727 14.9506187,13.2560288 14.483223,12.7886331 L14.4833094,12.7886331 Z"></path>
+        <path d="M22.2353957,13.7564029 L17.9957266,9.51673381 C15.658705,7.17971223 11.8532806,7.17971223 9.51630216,9.51673381 C9.04890647,9.9841295 9.04890647,10.7442734 9.51630216,11.2116691 C9.98369784,11.6790647 10.7438417,11.6790647 11.2112374,11.2116691 C12.6134245,9.80948201 14.8937698,9.80948201 16.3008777,11.2116691 L20.5405468,15.4513381 C21.2204029,16.1311942 21.5933957,17.032964 21.5933957,17.9960719 C21.5933957,18.9591799 21.2204201,19.8609496 20.5405468,20.5408058 C19.1808345,21.900518 16.8107914,21.900518 15.4509065,20.5408058 L12.8494964,17.9346906 C12.3821007,17.467295 11.6219568,17.467295 11.1545612,17.9346906 C10.6871655,18.4020863 10.6871655,19.1622302 11.1545612,19.6296259 L13.7606763,22.231036 C14.8937698,23.3641295 16.3998561,23.9873525 18.0003453,23.9873525 C19.6008345,23.9873525 21.1069209,23.3641295 22.2400144,22.231036 C23.3731079,21.0979424 23.9963309,19.5918561 23.9963309,17.9913669 C23.9916095,16.3908777 23.3684029,14.8895396 22.2353094,13.756446 L22.2353957,13.7564029 Z"></path>
+        <path d="M22.2353957,13.7564029 L17.9957266,9.51673381 C15.658705,7.17971223 11.8532806,7.17971223 9.51630216,9.51673381 C9.04890647,9.9841295 9.04890647,10.7442734 9.51630216,11.2116691 C9.98369784,11.6790647 10.7438417,11.6790647 11.2112374,11.2116691 C12.6134245,9.80948201 14.8937698,9.80948201 16.3008777,11.2116691 L20.5405468,15.4513381 C21.2204029,16.1311942 21.5933957,17.032964 21.5933957,17.9960719 C21.5933957,18.9591799 21.2204201,19.8609496 20.5405468,20.5408058 C19.1808345,21.900518 16.8107914,21.900518 15.4509065,20.5408058 L12.8494964,17.9346906 C12.3821007,17.467295 11.6219568,17.467295 11.1545612,17.9346906 C10.6871655,18.4020863 10.6871655,19.1622302 11.1545612,19.6296259 L13.7606763,22.231036 C14.8937698,23.3641295 16.3998561,23.9873525 18.0003453,23.9873525 C19.6008345,23.9873525 21.1069209,23.3641295 22.2400144,22.231036 C23.3731079,21.0979424 23.9963309,19.5918561 23.9963309,17.9913669 C23.9916095,16.3908777 23.3684029,14.8895396 22.2353094,13.756446 L22.2353957,13.7564029 Z"></path>
+      </svg>
+    </a>
+  </script>
+{{/isnt}}
+
+{{! Maybe hide Table of Contents based on article label }}
+{{~#each (filter article.labels on="identifier" equals="no_toc")}}
+<style>
+  .table-of-contents { display: none !important; }
+</style>
+{{/each~}}
+
+{{! Video player script }}
+<script type="text/javascript" src="{{asset 'script-players.min.js'}}"></script>
+
+{{! Lightboxes script }}
+<script type="text/javascript" src="{{asset 'script-lightboxes.min.js'}}"></script>
+
+<script type="text/javascript">
+  document.documentElement.classList.add('article-page', 'article-{{article.id}}', 'section-{{section.id}}');
+  {{~#each (slice article.path_steps 0 1)}}
+  document.documentElement.classList.add(`category-${Util.getPageId('{{url}}')}`);
+  {{/each~}}
+</script>

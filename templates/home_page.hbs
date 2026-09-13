@@ -1,0 +1,1181 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Notification }}
+  {{#if settings.notification_content}}
+    {{#isnt (dc settings.notification_content) '#'}}
+      <div class="element-notification p-4 font-size-md color-scheme-{{settings.color_scheme_notification}} js-notification" id="notification">
+        <script type="text/template">
+          <div class="container relative flex align-items-center justify-content-center">
+            <% if (icon) { %>
+            <span class="element-icon mr-2 <%= icon %> font-size-xl"></span>
+            <% } %>
+            <div class="element-group font-semibold">
+              <%= content %>
+            </div>
+            <% if (dismissible) { %>
+            <button class="element-button not-a-button absolute right-0 p-1 ml-auto cursor-pointer text-inherit hover:text-inherit js-close">
+              <span class="fas fa-xmark font-size-lg"></span>
+            </button>
+            <% } %>
+          </div>
+        </script>
+      </div>
+    {{/isnt}}
+  {{/if}} {{! /.element-notification }}
+
+  {{! Hero }}
+  <div class="element-hero hero{{#if settings.fixed_header}} offset-fixed-header{{/if}}" id="hero">
+
+    {{! Hero content }}
+    <div class="hero-content relative z-40 w-full" id="hero-content">
+
+      {{! Container }}
+      <div class="element-container container max-w-md text-{{settings.hero_content_alignment}} pb-9 {{#if settings.fixed_header}}pt-7{{else}}pt-9{{/if}} lg:px-0" data-editable>
+
+        {{! Badge }}
+        <!--<div class="element-badge badge bg-translucent text-white lg:mt-4">
+          <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+          </svg>
+          AI-powered Support
+        </div>-->
+
+        {{! Heading }}
+        {{#if settings.hero_heading}}
+          <h1 class="element-heading hero-heading mt-2 mb-0 font-size-4xl line-height-1 lg:font-size-5xl" data-editable>
+            {{~#if settings.use_translations}}
+              {{dc settings.hero_heading}}
+            {{else}}
+              {{settings.hero_heading}}
+            {{/if~}}
+          </h1>
+        {{/if}} {{! /.element-heading }}
+
+        {{! Paragraph }}
+        {{#if settings.hero_text}}
+          <p class="element-paragraph mt-2 mb-0 lg:font-size-xl" data-editable>
+            {{~#if settings.use_translations}}
+              {{dc settings.hero_text}}
+            {{else}}
+              {{settings.hero_text}}
+            {{/if~}}
+          </p>
+        {{/if}} {{! /.element-paragraph }}
+
+        {{! Search }}
+       <!-- <div class="element-search search search-left search-lg mt-6 mb-2 lg:mx-7" data-editable>
+          <h2 class="sr-only">{{ t 'search' }}</h2>
+          {{~#if settings.search_placeholder}}
+            {{#if settings.use_translations}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=true placeholder=(dc settings.search_placeholder)}}
+            {{else}}
+              {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=true placeholder=settings.search_placeholder}}
+            {{/if}}
+          {{else}}
+            {{search class='form-field mb-0' instant=settings.instant_search scoped=settings.scoped_search submit=true}}
+          {{/if~}}
+          <svg class="search-icon transition" aria-hidden="true">
+            <use xlink:href="#icon-search" />
+          </svg>
+        </div> --> {{! /.element-search }}
+
+       <link rel="icon" type="image/x-icon" href="#">
+        <script type="text/javascript" src="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/an.js"></script>
+        <script type="text/javascript" src="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/searchbox.js"></script>
+        <link rel="stylesheet" href="https://df1n6ggjt7q61.cloudfront.net/df1c86e67a638bfa5e56b8bd74d06300/search-clients/071f03fd-0c06-11f1-8107-0242ac120004/searchbox.css">
+        <div id="auto">
+            <div ng-controller="SearchautoController">
+              <div bind-html-compile="autocompleteHtml"></div>
+            </div>
+        </div>
+
+        {{! Popular keywords }}
+        {{~#isnt settings.popular_keywords_style 'none'}}
+          {{~#if settings.popular_keywords}}
+            <div class="element-popular-keywords popular-keywords js-popular-keywords" id="popular-keywords">
+
+              {{! Links }}
+              {{~#is settings.popular_keywords_style 'links'}}
+                <script type="text/template" id="tmpl-popular-keywords">
+                  <% const parsedKeywords = Util.parsePopularKeywords(keywords); %>
+                  <div class="inline-flex flex-wrap align-items-center justify-content-center m-1 font-size-md">
+                    {{#if settings.popular_keywords_heading}}
+                      <p class="element-paragraph m-1">
+                        {{#if settings.use_translations}}
+                          {{dc settings.popular_keywords_heading}}
+                        {{else}}
+                          {{settings.popular_keywords_heading}}
+                        {{/if}}
+                      </p>
+                    {{/if}}
+                    <div class="flex flex-wrap align-items-center">
+                      <% parsedKeywords.forEach((keyword, index) => { %>
+                        <div class="flex align-items-center m-1">
+                          <a
+                            class="element-link inline-block text-inherit hover:text-inherit"
+                            href="<%= keyword.html_url %>"
+                            title="<%= keyword.title %>">
+                            <%= keyword.title %>
+                          </a><% if (index !== (parsedKeywords.length - 1)) { %>,<% } %>
+                        </div>
+                      <% }) %>
+                    </div>
+                  </div>
+                </script>
+              {{/is~}}
+
+            </div>
+          {{/if~}}
+        {{/isnt~}} {{! /.element-popular-keywords }}
+
+      </div> {{! /.element-container }}
+
+      {{! Divider }}
+      {{~#isnt settings.hero_element_shape 'none'}}
+        <div class="element-divider shape-divider rotate-180" data-target="#page-container [class*='color-scheme-']" id="hero-divider">
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <use xlink:href="#shape-{{settings.hero_element_shape}}" />
+          </svg>
+        </div>
+      {{/isnt~}} {{! / .element-divider }}
+
+    </div>
+
+    {{! Hero background }}
+    <div class="hero-background absolute top-0 left-0 h-full w-full">
+
+      {{! Color gradient }}
+      {{#is settings.hero_image_style 'gradient'}}
+        <div class="hero-background-gradient bg-hero-gradient absolute top-0 left-0 w-full h-full z-10"></div>
+      {{/is}}
+
+      {{! Color and/or image }}
+      {{#isnt settings.hero_image_style 'gradient'}}
+
+        {{! Background color }}
+        <div class="hero-background-overlay bg-hero bg-hero-{{settings.bg_gradient_hero}} absolute top-0 left-0 w-full h-full z-20"></div>
+
+        {{! Background image }}
+        {{#isnt settings.hero_image_style 'color'}}
+          <div class="hero-background-image bg-home absolute top-0 left-0 w-full h-full z-{{#contains settings.hero_image_style 'overlay'}}30{{else}}10{{/contains}}
+            {{~#is settings.hero_image_style 'overlay-pattern'}} bg-contain bg-repeat{{else}} bg-cover bg-center{{/is~}}"
+            {{~#is settings.hero_image_style 'parallax'}} x-data="parallax"{{/is}}>
+          </div>
+        {{/isnt}}
+
+      {{/isnt}}
+
+    </div>
+
+  </div> {{! /.element-hero }}
+
+  {{! Service actions }}
+  <div class="element-group service-actions py-7 bg-subtle">
+    <div class="element-container container">
+      <div class="md:mt-6" id="service-actions">
+
+        <script type="text/template" id="tmpl-service-actions">
+
+          <div class="element-row row col-gap-md">
+            <% blocks.forEach(block => { %>
+              <div class="element-column col-12 md:col-6 lg:col-4">
+                <div class="element-card card p-6 align-items-start justify-content-start h-full transition hover:shadow hover:float">
+                  <% if (block.image_width) { %>
+                    <a class="link-stretched element-link inline-flex p-3 align-items-center justify-content-center border-radius-lg text-<%= block.color %> bg-<%= block.color %>" href="<%= block.html_url %>">
+                      <img
+                        class="element-image img-fluid flex-shrink-0"
+                        style="width: <%= block.image_width %>; height: auto;"
+                        src="<%= block.image %>"
+                        alt="<%= block.name %>"
+                        x-data="inlineSVG"
+                      />
+                    </a>
+                  <% } %>
+                  <h3 class="element-heading mt-4 mb-3">
+                    <a class="element-link link-stretched text-inherit hover:no-underline hover:text-inherit<% if (!block.html_url) { %> pointer-events-none<% } %>" href="<%= block.html_url %>" x-data="link">
+                      <%= block.name %>
+                    </a>
+                  </h3>
+                  <% if (block.description) { %>
+                    <p class="element-paragraph mb-6 text-subtle">
+                      <%= block.description %>
+                    </p>
+                  <% } %>
+                  <a class="button button-brand mt-auto w-full" href="<%= block.html_url %>">
+                    <%= block.label %>
+                  </a>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+
+          <!--<div class="cta card align-items-center px-6 py-7 mt-5 text-center md:flex-row md:text-left">
+            <div class="inline-flex p-4 align-items-center justify-content-center border-radius-lg text-<%= cta.color %> bg-<%= cta.color %>">
+              <img
+                class="element-image img-fluid flex-shrink-0"
+                style="width: <%= cta.image_width %>; height: auto;"
+                src="<%= cta.image %>"
+                alt="<%= cta.name %>"
+                x-data="inlineSVG"
+              />
+            </div>
+            <div class="flex-1 my-5 md:my-0 md:mx-5">
+              <h3 class="my-0 md:font-size-2xl">
+                <%= cta.name %>
+              </h3>
+              <p class="mt-2 mb-0">
+                <%= cta.description %>
+              </p>
+            </div>
+            <a class="button button-brand button-lg" href="<%= cta.html_url %>">
+              <%= cta.label %>
+            </a>
+          </div>-->
+
+        </script>
+
+        <script type="application/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+
+          // Locale-based reference guide URLs, keyed by the user's Zendesk profile locale (data.user.locale)
+          var referenceGuideUrls = {
+            'en-us': 'https://hunterdouglas.dcatalog.com/',
+            'en-ca': 'https://hunterdouglasca.dcatalog.com/',
+            'fr-ca': 'https://hunterdouglasca.dcatalog.com/fr/'
+          };
+          var defaultReferenceGuideUrl = 'https://hunterdouglas.dcatalog.com/';
+
+          function urlForLocale(locale) {
+            var key = (locale || '').toLowerCase();
+            return referenceGuideUrls[key] || defaultReferenceGuideUrl;
+          }
+
+          var el = document.getElementById('service-actions');
+
+          var allBlocks = [
+            {
+              name: 'Create Ticket',
+              description: 'Submit a ticket to support',
+              label: 'Create a Ticket',
+              html_url: '/hc/en-us/requests/new?ticket_form_id=47856934199956',
+              image: '{{asset 'image-quick-action-2.svg'}}',
+              image_width: '28px',
+              color: 'blue',
+            },
+            {
+              name: 'View Tickets',
+              description: 'Check your open tickets',
+              label: 'View Tickets',
+              html_url: '/hc/en-us/requests',
+              image: '{{asset 'image-quick-action-1.svg'}}',
+              image_width: '28px',
+              color: 'green',
+            },
+            {
+              name: 'HD Reference Guides',
+              description: 'Access branded reference guides',
+              label: 'Reference Guides',
+              html_url: null, // filled in below once we know the user's locale
+              image: '{{asset 'image-quick-action-4.svg'}}',
+              image_width: '28px',
+              color: 'amber',
+              // Hide this tile entirely when the user's organization Branding
+              // custom field is set to 'al' (Alta) -- the Alta tile below is
+              // shown for that organization instead.
+              orgRestriction: {
+                field: 'branding',
+                excludeValues: ['al']
+              }
+            },
+          	{
+              name: 'Alta Reference Guides',
+              description: 'Access branded reference guides',
+              label: 'Reference Guides',
+              html_url: null, // filled in below once we know the user's locale
+              image: '{{asset 'image-quick-action-4.svg'}}',
+              image_width: '28px',
+              color: 'amber',
+            },          	
+            {
+              name: 'Newsroom',
+              description: 'Access the latest announcements',
+              label: 'Newsroom',
+              html_url: 'https://hunterdouglassb-hd.sabacloud.com',
+              image: '{{asset 'image-service-action-4.svg'}}',
+              image_width: '28px',
+              color: 'blue',
+            },
+            {
+              name: 'Installer Events',
+              description: 'Register for upcoming installer training events',
+              label: 'Eventbrite',
+              html_url: 'https://www.eventbrite.com/o/hunter-douglas-121302968250',
+              image: '{{asset 'image-quick-action-5.svg'}}',
+              image_width: '28px',
+              color: 'green',
+            },
+            {
+              name: 'Learning Center',
+              description: 'Explore training and learning resources',
+              label: 'Learning Center',
+              html_url: 'https://hunterdouglassb.sabacloud.com/Saba/Web_wdk/NA1TNB0166/index/prelogin.rdf?bdr=true',
+              image: '{{asset 'image-quick-action-4.svg'}}',
+              image_width: '28px',
+              color: 'amber',
+            },
+            {
+              name: 'Brite Pay Help',
+              description: 'Help and Resources for Brite Pay',
+              label: 'Brite Pay Help',
+              html_url: 'https://hunterdouglas-dealer1775168019.zendesk.com/hc/en-us/p/brite_pay',
+              image: '{{asset 'image-quick-action-3.svg'}}',
+              image_width: '28px',
+              color: 'green',
+              restriction: {
+                field: 'brite_pay_pilot',
+                values: [true]
+              }
+            }
+          ];
+
+          var cta = {
+            name: 'Technical Support & Troubleshooting',
+            description: 'Access advanced troubleshooting resources for technical and motorization support',
+            label: 'Try Product Assist',
+            html_url: '#',
+            image: '{{asset 'image-service-action-4.svg'}}',
+            image_width: '32px',
+            color: 'red',
+          };
+
+          // The "Branding" field that decides whether the HD Reference Guides tile
+          // should be hidden does NOT live on the organization record itself -- it
+          // lives on a related custom object record (sales_area_data), connected to
+          // the organization via the "dealer_account" lookup relationship field.
+          //
+          // NOTE: Zendesk's filtered-search endpoint for custom object records
+          // (POST .../records/search with a "custom_object_fields.<key>": {"$eq": ...}
+          // filter) doesn't document the exact value format a lookup relationship
+          // field expects, and in testing it was returning zero records even though
+          // matching sales_area_data records exist. So instead this pulls the
+          // sales_area_data records directly (a plain, well-documented GET/list call)
+          // and matches the dealer_account field to the organization on the client
+          // side, tolerating a few different formats Zendesk might return for a
+          // lookup field's value (a ZRN string like "zen:organization:12345", a plain
+          // numeric id, or an object like {"id": 12345, ...}).
+          function normalizeLookupId(value) {
+            if (value === null || value === undefined) return null;
+            if (typeof value === 'object') {
+              // e.g. { id: 12345, url: '...' }
+              if (value.id !== undefined && value.id !== null) return String(value.id);
+              return null;
+            }
+            var str = String(value);
+            var match = str.match(/(\d+)\s*$/); // pulls the trailing id out of "zen:organization:12345" or "12345"
+            return match ? match[1] : str;
+          }
+
+          function fetchAllSalesAreaRecords(cursor, accumulated, pagesFetched) {
+            accumulated = accumulated || [];
+            pagesFetched = pagesFetched || 0;
+            var MAX_PAGES = 10; // safety cap: 10 x 100 = up to 1000 records
+            var url = '/api/v2/custom_objects/sales_area_data/records?page[size]=100' + (cursor ? '&page[after]=' + encodeURIComponent(cursor) : '');
+            return fetch(url, { credentials: 'same-origin' })
+              .then(function (res) { return res.json(); })
+              .then(function (data) {
+                var records = (data && data.custom_object_records) || [];
+                var all = accumulated.concat(records);
+                var meta = (data && data.meta) || {};
+                pagesFetched += 1;
+                if (meta.has_more && meta.after_cursor && pagesFetched < MAX_PAGES) {
+                  return fetchAllSalesAreaRecords(meta.after_cursor, all, pagesFetched);
+                }
+                if (meta.has_more && pagesFetched >= MAX_PAGES) {
+                  console.warn('sales_area_data: hit the ' + MAX_PAGES + '-page safety cap; some records were not checked.');
+                }
+                return all;
+              });
+          }
+
+          function fetchDealerBranding(organizationId, csrfToken) {
+            if (!organizationId) {
+              return Promise.resolve(null);
+            }
+            return fetchAllSalesAreaRecords()
+              .then(function (allRecords) {
+                console.log('sales_area_data total records fetched:', allRecords.length);
+                if (allRecords[0]) {
+                  // Sample record so we can see the real shape of dealer_account / branding in the console.
+                  console.log('sales_area_data sample record:', allRecords[0]);
+                }
+
+                var orgIdStr = String(organizationId);
+                var matches = allRecords.filter(function (record) {
+                  var fields = (record && record.custom_object_fields) || {};
+                  var normalized = normalizeLookupId(fields.dealer_account);
+                  return normalized === orgIdStr;
+                });
+                console.log('sales_area_data records matching org ' + organizationId + ':', matches);
+
+                if (!matches.length) return null;
+
+                // If more than one related record exists, treat the org as Alta-branded
+                // if ANY of them are flagged 'al'.
+                var alRecord = matches.filter(function (record) {
+                  var fields = (record && record.custom_object_fields) || {};
+                  var value = (fields.branding || '').toString().trim().toLowerCase();
+                  return value === 'al';
+                })[0];
+                return alRecord ? 'al' : (matches[0].custom_object_fields && matches[0].custom_object_fields.branding) || null;
+              })
+              .catch(function (err) {
+                console.error('Failed to fetch sales_area_data branding for org ' + organizationId + ':', err);
+                return null; // Fail open: HD Reference Guides stays visible if the lookup fails
+              });
+          }
+
+          // Single request: pulls both the reference-guide locale and the custom fields
+          // used for restriction checks (e.g. brite_pay_pilot) straight from the Zendesk user record.
+          fetch('/api/v2/users/me.json?include=organizations', {credentials: 'same-origin'})
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+              var user = (data && data.user) || {};
+          		var organizations = (data && data.organizations) || [];
+              var userFields = user.user_fields || {};
+
+          		var org = organizations.filter(function (o) { return o.id === user.organization_id; })[0] || organizations[0] || {};
+          		var orgFields = org.organization_fields || {};
+
+              var referenceGuideUrl = urlForLocale(user.locale);
+          		console.log(referenceGuideUrl)
+          		console.log(data.user.locale)
+          		console.log(user.name)
+          		console.log(data.user)
+          		console.log(orgFields)
+          		console.log('organizations returned:', organizations)
+
+              return fetchDealerBranding(user.organization_id, user.authenticity_token).then(function (brandingValue) {
+                console.log('resolved dealer branding value:', brandingValue);
+
+                var blocksWithUrl = allBlocks.map(function (block) {
+                  if (block.name === 'HD Reference Guides' || block.name === 'Alta Reference Guides') {
+                    return Object.assign({}, block, { html_url: referenceGuideUrl });
+                  }
+                  return block;
+                });
+
+                var templateData = {
+                  blocks: blocksWithUrl.filter(function (block) {
+                    // Organization-level restriction: hide HD Reference Guides when the
+                    // related sales_area_data record's Branding field is 'al' (Alta).
+                    if (block.orgRestriction) {
+                      var normalizedBranding = (brandingValue || '').toString().trim().toLowerCase();
+                      if (block.orgRestriction.excludeValues.indexOf(normalizedBranding) !== -1) {
+                        return false;
+                      }
+                    }
+                    if (!block.restriction) return true; // No restriction = show for everyone
+                    var fieldValue = userFields[block.restriction.field];
+                    return block.restriction.values.indexOf(fieldValue) !== -1;
+                  }),
+                  cta: cta
+                };
+
+                Util.renderTemplate(el, 'service-actions', templateData);
+              });
+            })
+            .catch(function (err) {
+              console.error('Failed to fetch user record:', err);
+              // Fail-safe: default reference guide URL, restricted blocks hidden, unauthenticated visitors included
+              var blocksWithUrl = allBlocks.map(function (block) {
+                if (block.name === 'HD Reference Guides' || block.name === 'Alta Reference Guides') {
+                  return Object.assign({}, block, { html_url: defaultReferenceGuideUrl });
+                }
+                return block;
+              });
+              var templateData = {
+                blocks: blocksWithUrl.filter(function (block) { return !block.restriction; }),
+                cta: cta
+              };
+              Util.renderTemplate(el, 'service-actions', templateData);
+            });
+
+        });
+          
+         
+      </script>
+
+      </div>
+    </div>
+  </div>
+
+ <!-- {{! Quick actions }}
+<div class="element-group quick-actions py-7 bg-subtle">
+    <div class="element-container container text-center">
+      <h2 class="element-heading mb-3 lg:font-size-3xl">
+        Quick Actions
+      </h2>
+      <p class="element-paragraph text-subtle">
+        Get help fast with these common actions
+      </p>
+      <div class="mt-6" id="quick-actions">
+
+        <script type="text/template" id="tmpl-quick-actions">
+          <div class="element-row row col-gap-sm">
+            <% blocks.forEach(block => { %>
+              <div class="element-column col-12 md:col-4 lg:col-2">
+                <div class="element-card card p-5 align-items-center text-center h-full hover:shadow hover:float">
+                  <a class="link-stretched element-link inline-flex p-3 align-items-center justify-content-center circle bg-subtle" href="<%= block.html_url %>">
+                    <img class="element-image img-fluid" style="width: <%= block.image_width %>; height: auto;" src="<%= block.image %>" alt="<%= block.name %>" />
+                  </a>
+                  <h4 class="element-heading mb-2 font-size-base">
+                    <%= block.name %>
+                  </h4>
+                  <p class="element-paragraph mb-0 text-subtle font-size-md">
+                    <%= block.description %>
+                  </p>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </script>
+
+     <script type="application/javascript">
+          document.addEventListener('DOMContentLoaded', function() {
+            const el = document.getElementById('quick-actions');
+            const templateData = {
+              blocks: [
+          			{
+                  name: 'Create Ticket',
+                  description: 'Submit a new support request',
+                  html_url: '/hc/en-us/requests/new?ticket_form_id=40039074731412',
+                  image: '{{asset 'image-quick-action-2.svg'}}',
+                  image_width: '20px',
+                },
+                {
+                  name: 'View Tickets',
+                  description: 'Check your open cases',
+                  html_url: '/hc/en-us/requests',
+                  image: '{{asset 'image-quick-action-1.svg'}}',
+                  image_width: '20px',
+                },
+       					<div id="brite-pay-nav-link">
+                {
+                  name: 'PowerView Help',
+                  description: 'Get help with PowerView',
+                  html_url: 'https://hunterdouglas-dealer.zendesk.com/hc/en-us/search?searchString=powerview&activeType=all&from=0&sortby=_score&orderBy=desc&pageNo=1&aggregations=%5B%5D&uid=071f03fd-0c06-11f1-8107-0242ac120004&resultsPerPage=10&exactPhrase=&withOneOrMore=&withoutTheWords=&pageSize=10&language=en&suCaseCreate=false',
+                  image: '{{asset 'image-quick-action-3.svg'}}',
+                  image_width: '20px',
+                },
+       </div>
+                {
+                  name: 'Reference Guides',
+                  description: 'Access branded reference guides',
+                  html_url: 'https://hunterdouglas.dcatalog.com/',
+                  image: '{{asset 'image-quick-action-4.svg'}}',
+                  image_width: '20px',
+                },
+              ]
+            };
+            Util.renderTemplate(el, 'quick-actions', templateData);
+          });
+        </script>
+
+      </div>
+    </div>
+  </div> -->
+
+  {{! Category list }}
+  {{#isnt settings.content_block_style 'none'}}
+    <div class="element-category-list category-list color-scheme-{{settings.color_scheme_content_blocks}}" id="category-list">
+
+      {{! Card style }}
+      {{#is settings.content_block_style 'cards'}}
+        <div class="element-group bg-subtle py-7">
+          <div class="element-container container relative z-10">
+
+            {{! Heading }}
+            {{#if settings.content_blocks_heading}}
+              <h2 class="element-heading mt-0 mb-3 lg:font-size-3xl">
+                {{#if settings.use_translations}}
+                  {{dc settings.content_blocks_heading}}
+                {{else}}
+                  {{settings.content_blocks_heading}}
+                {{/if}}
+              </h2>
+            {{/if}}
+
+            {{! Categories and sections }}
+            <div class="element-row row col-gap-y-md row-cols-12 justify-content-{{#is settings.content_block_alignment 'left'}}start{{else}}center{{/is}}
+              {{~#if (compare settings.number_content_block_columns ">=" "2")}} md:row-cols-6{{/if~}}
+              {{~#if (compare settings.number_content_block_columns ">=" "3")}} lg:row-cols-4{{/if~}}
+              {{~#if (compare settings.number_content_block_columns "==" "4")}} xl:row-cols-3{{/if~}}">
+
+              {{#each categories}}
+                {{#if ../has_multiple_categories}}
+                  <div class="col-12">
+                    <div class="element-card card align-items-{{#is ../settings.content_block_alignment 'left'}}start{{else}}center{{/is}} text-{{../settings.content_block_alignment}} h-full shadow transition hover:shadow-lg">
+                      {{#if ../settings.content_block_image_width}}
+                        <img
+                          class="element-image card-image img-fluid flex-shrink-0 mt-6 mx-5"
+                          alt="{{name}}"
+                          src="
+                            {{~#is @index 0~}}{{../settings.content_block_1_image}}{{~/is~}}
+                            {{~#is @index 1~}}{{../settings.content_block_2_image}}{{~/is~}}
+                            {{~#is @index 2~}}{{../settings.content_block_3_image}}{{~/is~}}
+                            {{~#is @index 3~}}{{../settings.content_block_4_image}}{{~/is~}}
+                            {{~#is @index 4~}}{{../settings.content_block_5_image}}{{~/is~}}
+                            {{~#is @index 5~}}{{../settings.content_block_6_image}}{{~/is~}}
+                            {{~#is @index 6~}}{{../settings.content_block_7_image}}{{~/is~}}
+                            {{#if (compare @index ">=" 7)}}{{../settings.content_block_8_image}}{{/if}}
+                          "
+                          x-data :src="$theme.image('category-{{id}}', $el.src)"
+                          style="width: {{../settings.content_block_image_width}}; height: auto;"
+                        />
+                      {{/if}}
+                      <div class="element-group card-body pb-6">
+                        <h3 class="element-heading h2 my-0">
+                          <a class="element-link link-stretched text-brand hover:no-underline hover:text-brand" href="{{url}}">
+                            {{name}}
+                          </a>
+                        </h3>
+                        {{#if description}}
+                          <p class="element-paragraph mt-3 mb-0">
+                            {{description}}
+                          </p>
+                        {{/if}}
+                      </div>
+                    </div>
+                  </div>
+                {{else}}
+                  {{#each sections}}
+                    <div class="col-12">
+                      <div class="element-card card align-items-{{#is ../../settings.content_block_alignment 'left'}}start{{else}}center{{/is}} text-{{../../settings.content_block_alignment}} h-full shadow transition hover:shadow-lg">
+                        {{#if ../../settings.content_block_image_width}}
+                          <img
+                            class="element-image card-image img-fluid mt-6 flex-shrink-0"
+                            alt="{{name}}"
+                            src="
+                              {{~#is @index 0~}}{{../../settings.content_block_1_image}}{{~/is~}}
+                              {{~#is @index 1~}}{{../../settings.content_block_2_image}}{{~/is~}}
+                              {{~#is @index 2~}}{{../../settings.content_block_3_image}}{{~/is~}}
+                              {{~#is @index 3~}}{{../../settings.content_block_4_image}}{{~/is~}}
+                              {{~#is @index 4~}}{{../../settings.content_block_5_image}}{{~/is~}}
+                              {{~#is @index 5~}}{{../../settings.content_block_6_image}}{{~/is~}}
+                              {{~#is @index 6~}}{{../../settings.content_block_7_image}}{{~/is~}}
+                              {{#if (compare @index ">=" 7)}}{{../../settings.content_block_8_image}}{{/if}}
+                            "
+                            x-data :src="$theme.image('section-{{id}}', $el.src)"
+                            style="width: {{../../settings.content_block_image_width}}; height: auto;"
+                          />
+                        {{/if}}
+                        <div class="element-group card-body pb-6">
+                          <h3 class="element-heading h2 my-0">
+                            <a class="element-link link-stretched text-brand hover:no-underline hover:text-brand" href="{{url}}">
+                              {{name}}
+                            </a>
+                          </h3>
+                          {{#if description}}
+                            <p class="element-paragraph mt-3 mb-0">
+                              {{description}}
+                            </p>
+                          {{/if}}
+                        </div>
+                      </div>
+                    </div>
+                  {{/each}}
+                {{/if}}
+              {{/each}}
+            </div>
+
+            {{! Pagination }}
+            {{#if pagination}}
+              <div class="element-pagination pagination my-6 js-pagination">
+                {{pagination}}
+              </div>
+            {{/if}}
+
+          </div>
+        </div>
+      {{/is}}
+
+      {{! Tree with cards style }}
+      {{#is settings.content_block_style 'tree-cards'}}
+        <div class="element-group py-7 bg-subtle">
+          <div class="element-container container relative z-10">
+
+            {{! Heading }}
+            {{#if settings.content_blocks_heading}}
+              <h2 class="element-heading mt-0 mb-3 lg:font-size-3xl">
+                {{#if settings.use_translations}}
+                  {{dc settings.content_blocks_heading}}
+                {{else}}
+                  {{settings.content_blocks_heading}}
+                {{/if}}
+              </h2>
+            {{/if}}
+
+            <p class="element-paragraph text-subtle">
+              Everything you need to run your business
+            </p>
+
+            <div class="element-row row col-gap-md justify-content-{{#is settings.content_block_alignment 'left'}}start{{else}}center{{/is}}">
+              {{#each categories}}
+                {{#if ../has_multiple_categories}}
+                  <div class="element-column col-12 text-{{../settings.content_block_alignment}}
+                    {{~#if (compare ../settings.number_content_block_columns ">=" "2")}} md:col-6{{/if~}}
+                    {{~#if (compare ../settings.number_content_block_columns ">=" "3")}} lg:col-4{{/if~}}
+                    {{~#if (compare ../settings.number_content_block_columns "==" "4")}} xl:col-3{{/if~}}">
+                    <div class="element-card card py-6 align-items-{{#is ../settings.content_block_alignment 'left'}}start{{else}}center{{/is}} h-full hover:shadow hover:float">
+
+                      <div class="element-group flex align-items-center px-6 mb-3">
+
+                        {{#if ../settings.content_block_image_width}}
+                          <div class="flex p-3 mr-3 border-radius-lg bg-subtle">
+                            <img
+                              class="element-image card-image img-fluid flex-shrink-0"
+                              alt="{{name}}"
+                              src="
+                                {{~#is @index 0~}}{{../settings.content_block_1_image}}{{~/is~}}
+                                {{~#is @index 1~}}{{../settings.content_block_2_image}}{{~/is~}}
+                                {{~#is @index 2~}}{{../settings.content_block_3_image}}{{~/is~}}
+                                {{~#is @index 3~}}{{../settings.content_block_4_image}}{{~/is~}}
+                                {{~#is @index 4~}}{{../settings.content_block_5_image}}{{~/is~}}
+                                {{~#is @index 5~}}{{../settings.content_block_6_image}}{{~/is~}}
+                                {{~#is @index 6~}}{{../settings.content_block_7_image}}{{~/is~}}
+                                {{#if (compare @index ">=" 7)}}{{../settings.content_block_8_image}}{{/if}}
+                              "
+                              x-data :src="$theme.image('category-{{id}}', $el.src)"
+                              style="width: {{../settings.content_block_image_width}}; height: auto;"
+                            />
+                          </div>
+                        {{/if}}
+
+                        <h3 class="element-heading my-2">
+                          <a class="text-inherit hover:no-underline hover:text-brand" href="{{url}}">
+                            {{name}}
+                          </a>
+                        </h3>
+
+                      </div>
+
+
+                      <ul class="element-list list-unstyled px-5 text-{{../settings.content_block_alignment}} w-full">
+                        {{#if sections}}
+                          {{#each sections}}
+                            <li>
+                              <a class="element-link block px-3 py-2 border-radius-lg text-inherit hover:text-inherit hover:no-underline hover:bg-subtle" href="{{url}}">
+                                {{name}}
+                              </a>
+                            </li>
+                          {{/each}}
+                        {{/if}}
+                      </ul>
+
+                    </div>
+                  </div>
+                {{else}}
+                  {{#each sections}}
+                    <div class="element-column col-12 text-{{../../settings.content_block_alignment}}
+                      {{~#if (compare ../../settings.number_content_block_columns ">=" "2")}} md:col-6{{/if~}}
+                      {{~#if (compare ../../settings.number_content_block_columns ">=" "3")}} lg:col-4{{/if~}}
+                      {{~#if (compare ../../settings.number_content_block_columns "==" "4")}} xl:col-3{{/if~}}">
+                      <div class="element-card card p-6 align-items-{{#is ../../settings.content_block_alignment 'left'}}start{{else}}center{{/is}} h-full border-none">
+                        <h3 class="element-heading mt-0 mb-3">
+                          <a class="text-inherit hover:no-underline hover:text-brand" href="{{url}}">
+                            {{name}}
+                          </a>
+                        </h3>
+
+                        <div x-data="navigation({ articles: { section_id: {{id}} } })">
+                          <ul class="element-list list-unstyled mb-5 text-{{../../settings.content_block_alignment}} font-size-md" x-show="!loading && (articles.length )">
+
+                            {{! Subsections }}
+                            {{#if sections}}
+                              {{#each sections}}
+                                <li>
+                                  <a class="element-link {{#is ../../../settings.content_block_alignment 'left'}}inline-flex align-items-baseline{{else}}inline-block{{/is}} py-2 text-base hover:text-brand" href="{{url}}">
+                                    <template x-if="$theme.hasSymbol('icon-section')">
+                                      <svg class="svg-icon align-self-baseline mr-2 text-base">
+                                        <use :href="$theme.symbol('icon-section')" />
+                                      </svg>
+                                    </template><span>{{name}}</span>
+                                  </a>
+                                </li>
+                              {{/each}}
+                            {{/if}}
+
+                            {{! Articles }}
+                            <template x-for="article in articles.slice(0, 3)" :key="article.id">
+                              <li>
+                                <a class="element-link {{#is ../../settings.content_block_alignment 'left'}}inline-flex align-items-baseline{{else}}inline-block{{/is}} py-2 text-base hover:text-brand" :href="article.html_url">
+                                  <template x-if="$theme.hasSymbol('icon-article')">
+                                    <svg class="svg-icon mr-2 text-base">
+                                      <use :href="$theme.symbol('icon-article')" />
+                                    </svg>
+                                  </template><span x-text="article.title"></span>
+                                </a>
+                              </li>
+                            </template>
+
+                          </ul>
+                        </div>
+
+                        <a class="button button-outline-brand button-sm mt-auto" href="{{url}}">
+                          {{t 'show_all_articles'}}
+                        </a>
+                      </div>
+                    </div>
+                  {{/each}}
+                {{/if}}
+              {{/each}}
+            </div>
+
+            {{! Pagination }}
+            {{#if pagination}}
+              <div class="element-pagination pagination my-6 js-pagination">
+                {{pagination}}
+              </div>
+            {{/if}}
+
+          </div>
+        </div>
+      {{/is}}
+
+    </div>
+  {{/isnt}} {{! /.element-category-list }}
+
+  {{! Promoted articles }}
+  {{#isnt settings.promoted_article_list_style 'none'}}
+    <div class="element-promoted-articles promoted-articles color-scheme-{{settings.color_scheme_promoted_articles}}" id="promoted-articles">
+
+      {{! Accordion style }}
+      {{#is settings.promoted_article_list_style 'accordion'}}
+        {{#if promoted_articles}}
+          <div class="element-group my-7">
+            <div class="element-container container relative z-10">
+
+              {{! Heading }}
+              {{#if settings.promoted_articles_heading}}
+                <h2 class="element-heading mt-0 text-{{settings.home_heading_alignment}} lg:font-size-3xl">
+                  {{#if settings.use_translations}}
+                    {{dc settings.promoted_articles_heading}}
+                  {{else}}
+                    {{settings.promoted_articles_heading}}
+                  {{/if}}
+                </h2>
+              {{/if}}
+
+              {{! Promoted articles }}
+              <div class="element-row row col-gap-sm">
+                {{#each promoted_articles}}
+                  <div class="element-column col-12
+                    {{~#if (compare ../settings.promoted_article_list_columns ">=" "2")}} md:col-6{{/if~}}
+                    {{~#if (compare ../settings.promoted_article_list_columns ">=" "3")}} lg:col-4{{/if~}}
+                    {{~#if (compare ../settings.promoted_article_list_columns "==" "4")}} xl:col-3{{/if~}}">
+                    <div class="element-card card" :class="(isExpanding || isExpanded) && 'border-primary'" x-data="collapse({ breakpoint: null })">
+                      <h2 class="element-heading h1 flex align-items-center justify-content-between px-5 my-4 cursor-pointer transition lg:font-size-xl hover:text-brand" :class="(isExpanding || isExpanded) && 'text-brand'" x-bind="trigger">
+                        {{title}}
+                        <svg class="svg-icon ml-2 bottom-0" :class="(isExpanding || isExpanded) && 'hidden'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 5V19M5 12H19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <svg class="svg-icon ml-2 bottom-0" x-cloak :class="!(isExpanding || isExpanded) && 'hidden'" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M5 12H19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </h2>
+                      <div class="collapse" x-bind="collapse">
+                        <div class="element-group px-5 pb-5 font-size-md transition-slow" :class="!(isExpanding || isExpanded) && 'opacity-0'">
+                          <p class="mb-0">
+                            {{snippet}}
+                          </p>
+                          <a class="button button-outline-brand button-sm mt-4" href="{{url}}">
+                            {{t 'see_more'}}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+
+            </div>
+          </div>
+        {{/if}}
+      {{/is}}
+
+      {{! Cards style }}
+      {{#is settings.promoted_article_list_style 'cards'}}
+        {{#if promoted_articles}}
+          <div class="element-group my-7">
+            <div class="element-container container relative z-10">
+
+              {{! Heading }}
+              {{#if settings.promoted_articles_heading}}
+                <h2 class="element-heading mt-0 text-{{settings.home_heading_alignment}} lg:font-size-3xl">
+                  {{#if settings.use_translations}}
+                    {{dc settings.promoted_articles_heading}}
+                  {{else}}
+                    {{settings.promoted_articles_heading}}
+                  {{/if}}
+                </h2>
+              {{/if}}
+
+              {{! Promoted articles }}
+              <div class="element-row row col-gap-md">
+                {{#each promoted_articles}}
+                  <div class="element-column col-12
+                    {{~#if (compare ../settings.promoted_article_list_columns ">=" "2")}} md:col-6{{/if~}}
+                    {{~#if (compare ../settings.promoted_article_list_columns ">=" "3")}} lg:col-4{{/if~}}
+                    {{~#if (compare ../settings.promoted_article_list_columns "==" "4")}} xl:col-3{{/if~}}">
+
+                    <div class="element-card card p-6 h-full">
+                      <h3 class="element-heading my-0 md:font-size-xl">
+                        <a class="element-link text-inherit hover:no-underline" href="{{url}}">
+                          {{title}}
+                        </a>
+                      </h3>
+                      <ul class="list-divider mt-2 mb-4">
+                        <li>
+                          <p class="element-paragraph inline my-2 text-subtle font-size-sm">
+                            {{#is created_at edited_at}}
+                              {{date edited_at timeago=true}}
+                            {{else}}
+                              {{date created_at timeago=true}}
+                            {{/is}}
+                          </p>
+                        </li>
+                        <li>
+                          <p class="element-paragraph inline my-2 text-subtle font-size-sm">
+                            {{vote_count}} {{t 'vote' count=vote_count}}
+                          </p>
+                        </li>
+                        <li>
+                          <p class="element-paragraph inline my-2 text-subtle font-size-sm">
+                            {{comment_count}} {{t 'comment' count=comment_count}}
+                          </p>
+                        </li>
+                      </ul>
+                      <p class="element-paragraph mb-4 text-base font-size-md">
+                        {{snippet}}
+                      </p>
+                      <div class="element-author article-author flex mt-auto" id="article-author">
+                        <div class="element-avatar avatar avatar-sm mr-2">
+                          {{#if author.agent}}
+                            <svg class="svg-icon absolute bottom-0 right-0 text-brand bg-base border border-white circle" aria-hidden="true">
+                              <use xlink:href="#icon-agent" />
+                            </svg>
+                          {{/if}}
+                          <img class="avatar-img" alt="{{author.name}}" src="{{author.avatar_url}}">
+                        </div>
+                        <div class="media-body align-self-center mr-2">
+                          {{#link 'user_profile' class="element-link font-size-md" id=author.id}}
+                            {{author.name}}
+                          {{/link}}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+
+            </div>
+          </div>
+        {{/if}}
+      {{/is}}
+
+      {{! List styles (bullet, unstyled, bordered) }}
+      {{#contains 'bullet unstyled bordered' settings.promoted_article_list_style}}
+        {{#if promoted_articles}}
+          <div class="element-group my-7">
+            <div class="element-container container relative z-10">
+
+              {{! Heading }}
+              {{#if settings.promoted_articles_heading}}
+                <h2 class="element-heading mt-0 text-{{settings.home_heading_alignment}} lg:font-size-3xl">
+                  {{#if settings.use_translations}}
+                    {{dc settings.promoted_articles_heading}}
+                  {{else}}
+                    {{settings.promoted_articles_heading}}
+                  {{/if}}
+                </h2>
+              {{/if}}
+
+              {{! Promoted articles }}
+              <ul class="element-row row mb-0
+                {{~#is settings.promoted_article_list_style 'bullet'}} col-gap-x-lg list-disc{{/is~}}
+                {{~#is settings.promoted_article_list_style 'unstyled'}} list-unstyled{{/is~}}
+                {{~#is settings.promoted_article_list_style 'bordered'}} list-unstyled list-bordered{{/is~}}">
+                {{~#each promoted_articles}}
+                  <li class="element-column col-12
+                    {{~#if (compare ../settings.promoted_article_list_columns ">" "1")}}
+                      {{~#is ../settings.promoted_article_list_style 'bordered'}}{{~#if @last}} border-bottom{{/if~}}{{/is~}}
+                    {{/if~}}
+                    {{~#if (compare ../settings.promoted_article_list_columns ">=" "2")}} md:col-6{{/if~}}
+                    {{~#if (compare ../settings.promoted_article_list_columns ">=" "3")}} lg:col-4{{/if~}}">
+                    <div class="element-group relative align-items-baseline {{#is ../settings.promoted_article_list_style 'bordered'}}py-3{{else}}py-2{{/is}} h-full">
+                      <a class="element-link link-stretched text-base{{#if ../settings.show_promoted_article_excerpt}} h4 my-0{{/if}} hover:text-brand" href="{{url}}">{{title}}</a>
+                      {{~#if internal~}}
+                        <svg class="svg-icon ml-1 text-base" aria-hidden="true">
+                          <title>{{t 'internal'}}</title>
+                          <use xlink:href="#icon-internal" />
+                        </svg>
+                      {{~/if~}}
+                      {{~#if ../settings.show_promoted_article_excerpt}}
+                        <p class="element-paragraph my-2 font-size-md break-words">
+                          {{snippet}}
+                        </p>
+                      {{/if}}
+                    </div>
+                  </li>
+                {{/each~}}
+              </ul>
+
+            </div>
+          </div>
+        {{/if}}
+      {{/contains}}
+
+    </div>
+  {{/isnt}} {{! /.element-promoted-articles }}
+
+  {{! Promoted videos }}
+  {{#if settings.promoted_video_ids}}
+    <div class="element-promoted-videos promoted-videos color-scheme-standard js-promoted-videos is-loading" id="promoted-videos">
+
+      {{! Carousel template }}
+      <script type="text/template" id="tmpl-promoted-videos">
+        <div class="element-group my-7">
+          <div class="element-container container" x-data="slider({ numberSlides: <%= number_columns %> })">
+
+            {{! Heading }}
+            {{#if settings.promoted_videos_heading}}
+              <h2 class="element-heading mt-0 text-{{settings.home_heading_alignment}} lg:font-size-3xl">
+                {{#if settings.use_translations}}
+                  {{dc settings.promoted_videos_heading}}
+                {{else}}
+                  {{settings.promoted_videos_heading}}
+                {{/if}}
+              </h2>
+            {{/if}}
+
+            {{! Videos }}
+            <div class="swiper-container relative hidden overflow-hidden" :class="{ 'hidden': isLoading }">
+              <div class="swiper-wrapper">
+                <% videos.forEach(video => { %>
+                  <div class="swiper-slide h-auto">
+                    <div class="element-card card <%= Util.classNames.align(alignment) %> h-full <%= Util.classNames.textAlign(alignment) %> bg-base">
+                      <div class="card-image relative w-full">
+                        <a class="element-link hover:no-underline" href="<%= video.url %>" data-fancybox<% if (video.provider === 'Wistia') { %> data-type="iframe"<% } %>>
+                          <div class="ratio-16-9 bg-center bg-cover transition hover:opacity-75" style="background-image: url('<%= video.thumbnail %>')"></div>
+                          <span class="element-icon fas fa-play absolute-center flex align-items-center justify-content-center w-7 h-7 bg-brand text-brand-inverse circle pointer-events-none"></span>
+                        </a>
+                      </div>
+                      <div class="element-group card-body border-top w-full">
+                        <h4 class="element-heading my-0 font-size-base truncate">
+                          <%= video.title %>
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+
+              <div class="absolute z-20 top-0 left-0 h-full flex align-items-center justify-content-center pointer-events-none -mt-6">
+                <a class="swiper-prev element-button button button-brand flex align-items-center justify-content-center p-2 mx-1 w-6 h-9" style="pointer-events: all" href="#">
+                  <svg class="fill-current cursor-pointer transition" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <path d="M67.208,94.614c-0.53,0-1.039-0.21-1.414-0.586L23.178,51.416c-0.487-0.487-0.671-1.163-0.55-1.792  c0.071-0.381,0.255-0.746,0.55-1.041L65.794,5.972c0.375-0.375,0.884-0.586,1.414-0.586l0,0c0.53,0,1.039,0.211,1.414,0.586  l8.2,8.201c0.781,0.781,0.781,2.047,0,2.828L43.823,50l32.999,32.999c0.781,0.781,0.781,2.047,0,2.828l-8.2,8.201  C68.247,94.403,67.738,94.614,67.208,94.614z" />
+                  </svg>
+                </a>
+              </div>
+
+              <div class="absolute z-20 top-0 right-0 h-full flex align-items-center justify-content-center pointer-events-none -mt-6">
+                <a class="swiper-next element-button button button-brand flex align-items-center justify-content-center p-2 mx-1 w-6 h-9" style="pointer-events: all" href="#">
+                  <svg class="fill-current cursor-pointer transition" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                    <path d="M32.792,94.602L32.792,94.602c-0.53,0-1.039-0.211-1.414-0.586l-8.2-8.201c-0.781-0.781-0.781-2.047,0-2.828l32.999-32.999  L23.178,16.989c-0.781-0.781-0.781-2.047,0-2.828l8.2-8.201c0.75-0.75,2.078-0.751,2.828,0l42.616,42.612  c0.487,0.487,0.671,1.163,0.55,1.792c-0.071,0.381-0.255,0.746-0.55,1.041L34.206,94.016C33.831,94.391,33.322,94.602,32.792,94.602 z" />
+                  </svg>
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </script>
+
+    </div>
+  {{/if}} {{! /.element-promoted-videos }}
+      
+
+
+  {{! Call-to-action }}
+  <div class="element-group cta py-7 bg-subtle">
+    <div class="element-container container max-w-lg">
+      <div class="element-card card align-items-center p-6 mb-6 color-scheme-secondary mx-auto border-0 shadow-lg md:flex-row md:p-7">
+
+        <div class="inline-flex p-4 mb-4 text-red bg-red border-radius-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+        </div>
+
+        <div class="flex-1 text-center md:mx-5 md:text-left">
+          <h3 class="element-heading mt-0 mb-3 md:font-size-2xl">
+            Need to speak with someone?
+          </h3>
+          <p class="mb-3">
+            Our technical support team is available to help with complex issues
+          </p>
+
+          <div class="inline-flex align-items-center font-size-md text-subtle">
+            <svg class="svg-icon flex-shrink-0 mr-2 bottom-0" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <p class="element-paragraph m-0">
+              Mon-Fri: 8AM - 8PM EST
+            </p>
+          </div>
+
+        </div>
+
+        <div class="element-group flex flex-column flex-1 mt-6 text-center lg:flex-row lg:ml-5">
+          <!--<a class="button button-brand button-lg mb-4 md:mr-1 lg:mb-0" href="/hc/en-us/requests/new?ticket_form_id=40039074731412">
+            Send a Message
+          </a>-->
+          <button class="button button-outline-brand font-size-md button-lg md:ml-1" id="messenger-button">
+            Chat With Us
+          </button>
+          <a class="button button-outline-brand font-size-md button-lg md:ml-2" href="tel:18444868973">
+            1-844-HUNTER-D
+          </a>
+        </div>
+        <script>
+          document.getElementById('messenger-button').onclick = function () {
+          zE("messenger", "show");
+          zE("messenger", "open");
+          }  
+        </script>
+      </div>
+    </div>
+  </div>  {{! /.element-call-to-action }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">
+  {{! Category and section images }}
+  {{~#each categories}}
+    {{~#if (asset id prefix='category-' suffix='.svg')~}}Theme.images['category-{{id}}'] = "{{asset id prefix='category-' suffix='.svg'}}";{{~/if~}}
+    {{~#if (asset id prefix='category-' suffix='.png')~}}Theme.images['category-{{id}}'] = "{{asset id prefix='category-' suffix='.png'}}";{{~/if~}}
+    {{~#if (asset id prefix='category-' suffix='.jpg')~}}Theme.images['category-{{id}}'] = "{{asset id prefix='category-' suffix='.jpg'}}";{{~/if~}}
+    {{~#if (asset id prefix='category-' suffix='.jpeg')~}}Theme.images['category-{{id}}'] = "{{asset id prefix='category-' suffix='.jpeg'}}";{{~/if~}}
+    {{~#each sections}}
+      {{~#if (asset id prefix='section-' suffix='.svg')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.svg'}}";{{~/if~}}
+      {{~#if (asset id prefix='section-' suffix='.png')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.png'}}";{{~/if~}}
+      {{~#if (asset id prefix='section-' suffix='.jpg')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.jpg'}}";{{~/if~}}
+      {{~#if (asset id prefix='section-' suffix='.jpeg')~}}Theme.images['section-{{id}}'] = "{{asset id prefix='section-' suffix='.jpeg'}}";{{~/if~}}
+    {{~/each~}}
+  {{~/each~}}
+
+  {{! Add a class name to the document element }}
+  document.documentElement.classList.add('home-page');
+</script>

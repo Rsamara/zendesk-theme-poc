@@ -1,0 +1,33 @@
+{{! Page container }}
+<div class="page-container" id="page-container">
+
+  {{! Container }}
+  <div class="element-container container" data-editable>
+
+    {{! Breadcrumbs }}
+    <div class="element-breadcrumbs breadcrumbs my-6 js-breadcrumbs" id="breadcrumbs">
+      {{breadcrumbs}}
+    </div> {{! / .element-breadrcumbs }}
+
+    {{! Heading }}
+    <h1 class="element-heading mt-6" data-editable>
+      {{t 'requests'}}
+    </h1> {{! / .element-heading }}
+
+    {{! Request list }}
+    <div class="element-request-list mb-7" id="request-list">
+      <script type="module">
+        import { renderRequestList } from 'request-list';
+
+        const container = document.getElementById('request-list');
+        const props = { locale: Theme.baseLocale, customStatusesEnabled: {{json help_center.custom_statuses_enabled}} };
+
+        renderRequestList(Theme.settings, props, container);
+      </script>
+    </div> {{! / .element-request-list }}
+
+  </div> {{! / .element-container }}
+
+</div> {{! /#page-container }}
+
+<script type="text/javascript">document.documentElement.classList.add('requests-page');</script>
