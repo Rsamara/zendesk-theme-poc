@@ -1,0 +1,49 @@
+
+name: Deploy Zendesk Theme
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Package theme
+        run: |
+          cd theme
+          zip -r ../theme.zip .
+
+      - name: Create Zendesk theme update job
+        id: create_job
+        env:
+          ZENDESK_SUBDOMAIN: ${{ secrets.ZENDESK_SUBDOMAIN }}
+          ZENDESK_EMAIL: ${{ secrets.ZENDESK_EMAIL }}
+          ZENDESK_API_TOKEN: ${{ secrets.ZENDESK_API_TOKEN }}
+          ZENDESK_THEME_ID: ${{ secrets.ZENDESK_THEME_ID }}
+        run: |
+          RESPONSE=$(curl -s -X POST \
+            "https://${ZENDESK_SUBDOMAIN}.zendesk.com/api/v2/guide/theming/themes/${ZENDESK_THEME_ID}/jobs" \
+            -u "${ZENDESK_EMAIL}/token:${ZENDESK_API_TOKEN}" \
+            -H "Content-Type: application/json")
+
+          echo "$RESPONSE"
+
+          echo "$RESPONSE" > job-response.json
+
+      - name: Upload theme
+        run: |
+          echo "Upload theme.zip to the Zendesk upload URL returned by the update job"
+
+      - name: Check update job
+        run: |
+          echo "Poll Zendesk until the theme update job completes"
+
+      - name: Publish theme
+        run: |
+          echo "Publish only after the update succeeds"
