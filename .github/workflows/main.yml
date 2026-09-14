@@ -36,61 +36,71 @@ jobs:
       # --------------------------------------------------
       # 3. Create Zendesk theme update job
       # --------------------------------------------------
-      - name: Create Zendesk theme update job
-        id: create_job
-        env:
-          ZENDESK_SUBDOMAIN: ${{ secrets.ZENDESK_SUBDOMAIN }}
-          ZENDESK_EMAIL: ${{ secrets.ZENDESK_EMAIL }}
-          ZENDESK_API_TOKEN: ${{ secrets.ZENDESK_API_TOKEN }}
-          ZENDESK_THEME_ID: ${{ secrets.ZENDESK_THEME_ID }}
-        run: |
-          set -e
+     - name: Create Zendesk theme update job
+  id: create_job
+  env:
+    ZENDESK_SUBDOMAIN: ${{ secrets.ZENDESK_SUBDOMAIN }}
+    ZENDESK_EMAIL: ${{ secrets.ZENDESK_EMAIL }}
+    ZENDESK_API_TOKEN: ${{ secrets.ZENDESK_API_TOKEN }}
+    ZENDESK_THEME_ID: ${{ secrets.ZENDESK_THEME_ID }}
+  run: |
+    set -euo pipefail
 
-          echo "Creating Zendesk theme update job..."
+    echo "Creating Zendesk theme update job..."
+    echo "Zendesk subdomain: ${ZENDESK_SUBDOMAIN}"
+    echo "Theme ID: ${ZENDESK_THEME_ID}"
 
-          BODY=$(jq -n \
-            --arg theme_id "$ZENDESK_THEME_ID" \
-            '{
-              job: {
-                attributes: {
-                  theme_id: $theme_id,
-                  replace_settings: true,
-                  format: "zip"
-                }
-              }
-            }')
+    BODY=$(jq -n \
+      --arg theme_id "$ZENDESK_THEME_ID" \
+      '{
+        job: {
+          attributes: {
+            theme_id: $theme_id,
+            replace_settings: true,
+            format: "zip"
+          }
+        }
+      }')
 
-          RESPONSE=$(curl -sS \
-            -X POST \
-            "https://${ZENDESK_SUBDOMAIN}.zendesk.com/api/v2/guide/theming/jobs/themes/updates" \
-            -u "${ZENDESK_EMAIL}/token:${ZENDESK_API_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -d "$BODY")
+    echo "Request body:"
+    echo "$BODY" | jq .
 
-          echo "$RESPONSE" | jq .
+    ZENDESK_URL="https://${ZENDESK_SUBDOMAIN}.zendesk.com/api/v2/guide/theming/jobs/themes/updates"
 
-          JOB_ID=$(echo "$RESPONSE" | jq -r '.job.id')
-          UPLOAD_URL=$(echo "$RESPONSE" | jq -r '.job.data.upload.url')
+    echo "Calling Zendesk API..."
+    echo "URL: ${ZENDESK_URL}"
 
-          if [ "$JOB_ID" = "null" ] || [ -z "$JOB_ID" ]; then
-            echo "ERROR: Failed to create Zendesk update job."
-            exit 1
-          fi
+    RESPONSE=$(curl -sS \
+      --fail-with-body \
+      -X POST \
+      "$ZENDESK_URL" \
+      -u "${ZENDESK_EMAIL}/token:${ZENDESK_API_TOKEN}" \
+      -H "Content-Type: application/json" \
+      -d "$BODY")
 
-          if [ "$UPLOAD_URL" = "null" ] || [ -z "$UPLOAD_URL" ]; then
-            echo "ERROR: Zendesk did not return an upload URL."
-            exit 1
-          fi
+    echo "Zendesk response:"
+    echo "$RESPONSE" | jq .
 
-          echo "Zendesk update job created."
-          echo "Job ID: $JOB_ID"
+    JOB_ID=$(echo "$RESPONSE" | jq -r '.job.id')
+    UPLOAD_URL=$(echo "$RESPONSE" | jq -r '.job.data.upload.url')
 
-          # Pass values to the next step
-          echo "job_id=$JOB_ID" >> "$GITHUB_OUTPUT"
-          echo "upload_url=$UPLOAD_URL" >> "$GITHUB_OUTPUT"
+    if [ "$JOB_ID" = "null" ] || [ -z "$JOB_ID" ]; then
+      echo "ERROR: Failed to create Zendesk update job."
+      exit 1
+    fi
 
-          # Save response for the upload step
-          echo "$RESPONSE" > job-response.json
+    if [ "$UPLOAD_URL" = "null" ] || [ -z "$UPLOAD_URL" ]; then
+      echo "ERROR: Zendesk did not return an upload URL."
+      exit 1
+    fi
+
+    echo "Zendesk update job created successfully."
+    echo "Job ID: $JOB_ID"
+
+    echo "job_id=$JOB_ID" >> "$GITHUB_OUTPUT"
+    echo "upload_url=$UPLOAD_URL" >> "$GITHUB_OUTPUT"
+
+    echo "$RESPONSE" > job-response.json
 
       # --------------------------------------------------
       # 4. Upload theme ZIP
